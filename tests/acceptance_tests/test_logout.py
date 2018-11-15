@@ -1,11 +1,11 @@
 import unittest as ut
-from ui import self
+from ta_app.ui import UI
 
 
 class TestLogout(ut.TestCase):
 
     def setUp(self):
-        self.uio = self()
+        self.uio = UI()
         self.uio.command("create_account Bob bobspw Supervisor")
 
     # Successful logout of current user

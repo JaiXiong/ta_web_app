@@ -1,11 +1,11 @@
 import unittest as ut
-from ui import self
+from ta_app.ui import UI
 
 
 class TestLogin(ut.TestCase):
 
     def setUp(self):
-        self.uio = self()
+        self.uio = UI()
         self.uio.command("create_account Bob bobspw Supervisor")
 
     def tearDown(self):
@@ -20,11 +20,11 @@ class TestLogin(ut.TestCase):
     # Failed login, user not in data base
     def test_login2(self):
         response = self.uio.command("login Alice alicespw")
-        self.assertEqual(response, "Login failed. Invalid username or password.")
+        self.assertEqual(response, "Login failed! Invalid username or password.")
         self.assertNotEqual(self.uio.currentUser, "Alice")
 
     # Failed login, password is incorrect
     def test_login3(self):
         response = self.uio.command("login Bob notbobspw")
-        self.assertEqual(response, "Login failed. Invalid username or password.")
+        self.assertEqual(response, "Login failed! Invalid username or password.")
         self.assertNotEqual(self.uio.currentUser, "Bob")

@@ -1,6 +1,6 @@
 import abc
-from course_object import Course
-from account_object import Account
+from ta_app.course_object import Course
+from ta_app.account_object import Account
 
 
 class DBConnect(abc.ABC):

@@ -1,24 +1,24 @@
 import unittest as ut
-from ui import self
+from ta_app.ui import UI
 
 
 class Test_account_edit(ut.TestCase):
 
     def setUp(self):
-        self.ui = self()
+        self.ui = UI()
 
     # test if username exist when not yet created
     def test_notExist(self):
-        self.ui.input_command("login user1 user1pass")
-        self.ui.input_command("edit_account user2")
-        self.assertEqual(self.ui.input_command("edit_account user2"), "user2 doesn't exist")
+        self.ui.command("login user1 user1pass")
+        self.ui.command("edit_account user2")
+        self.assertEqual(self.ui.command("edit_account user2"), "user2 doesn't exist")
 
     # test 2 different permissions
     def test_permissions(self):
-        self.ui.input_command("create_account user1 user1pass instructor")
-        self.ui.input_command("create_account user2 user2pass ta")
-        self.ui.input_command("login user2 user2pass")
-        self.assertEqual(self.ui.input_command("edit_account user1"), "you don't have permissions to edit this user")
+        self.ui.command("create_account user1 user1pass instructor")
+        self.ui.command("create_account user2 user2pass ta")
+        self.ui.command("login user2 user2pass")
+        self.assertEqual(self.ui.command("edit_account user1"), "you don't have permissions to edit this user")
 
     # test the view of the permissions based on login user
     def test_viewPermission(self):
@@ -31,28 +31,28 @@ class Test_account_edit(ut.TestCase):
                          "assign_instructor\n" \
                          "assign_TA\n" \
                          "assign_lab\n"
-        self.ui.input_command("create_account user1 user1pass supervisor")
-        self.ui.input_command("create_account user2 user2pass ta")
-        self.ui.input_command("login user1 user1pass")
-        self.assertEqual(permissionList, self.ui.input_command("edit_account user2"))
+        self.ui.command("create_account user1 user1pass supervisor")
+        self.ui.command("create_account user2 user2pass ta")
+        self.ui.command("login user1 user1pass")
+        self.assertEqual(permissionList, self.ui.command("edit_account user2"))
         self.assertEqual("please specify what field you would like to change "
-                         "and it's new value", self.ui.input_command("edit_account user2"))
+                         "and it's new value", self.ui.command("edit_account user2"))
 
     # test the correct type is entered after selection of field
     def test_type(self):
-        self.ui.input_command("create_account user1 user1pass supervisor")
-        self.ui.input_command("create_account user2 user2pass ta")
-        self.ui.input_command("login user1 user1pass")
-        self.ui.input_command("edit_account user2")
-        self.assertEqual(self.ui.input_command("<password> .....,.,.,,..,`````"),
+        self.ui.command("create_account user1 user1pass supervisor")
+        self.ui.command("create_account user2 user2pass ta")
+        self.ui.command("login user1 user1pass")
+        self.ui.command("edit_account user2")
+        self.assertEqual(self.ui.command("<password> .....,.,.,,..,`````"),
                          "Entered value is not valid for <password>")
 
     # test that the field is correct to begin with
     def test_type2(self):
-        self.ui.input_command("create_account user1 user1pass supervisor")
-        self.ui.input_command("create_account user2 user2pass ta")
-        self.ui.input_command("login user1 user1pass")
-        self.ui.input_command("edit_account user2")
-        self.ui.input_command("<gibberish> ......,,,......")
-        self.assertEqual(self.ui.input_command("<gibberish>"),
+        self.ui.command("create_account user1 user1pass supervisor")
+        self.ui.command("create_account user2 user2pass ta")
+        self.ui.command("login user1 user1pass")
+        self.ui.command("edit_account user2")
+        self.ui.command("<gibberish> ......,,,......")
+        self.assertEqual(self.ui.command("<gibberish>"),
                          "Entered field <gibberish> is not valid field")

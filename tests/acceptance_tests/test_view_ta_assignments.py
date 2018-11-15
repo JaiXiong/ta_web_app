@@ -1,12 +1,12 @@
 # Joe Connelly
 import unittest as ut
-from ui import self
+from ta_app.ui import UI
 
 
 class TestViewTaAssignments(ut.TestCase):
 
     def setUp(self):
-        self.ui = self()
+        self.ui = UI()
         self.ui.command("login defaultuser defaultpassword")
         self.ui.command("create_account Prof0 pass0 Instructor")
         self.ui.command("create_account ta0 pass1 TA")

@@ -1,12 +1,12 @@
 #Gus
 import unittest as ut
-from ui import self
+from ta_app.ui import UI
 
 
 class TestCreateCourse(ut.TestCase):
 
     def setUp(self):
-        self.ui = self()
+        self.ui = UI()
 
     # tests if a course with valid parameters is correctly created
     def testCreateCourse1(self):

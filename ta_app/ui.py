@@ -1,7 +1,8 @@
-from db_connect_object import DBConnection
-from account_object import Account
-from course_object import Course
-from superuser_login import Superuser
+from ta_app.db_connect_object import DBConnection
+from ta_app.account_object import Account
+from ta_app.course_object import Course
+from ta_app.superuser_login import Superuser
+
 
 class UI:
 

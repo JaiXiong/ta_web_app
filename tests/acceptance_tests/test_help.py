@@ -1,12 +1,12 @@
 import unittest as ut
-from ui import self
+from ta_app.ui import UI
 
 
 # All tests will not pass until permissions are complete
 class TestHelp(ut.TestCase):
 
     def setUp(self):
-        self.uio = self()
+        self.uio = UI()
         self.uio.command("create_account Bob bobspw Supervisor")
         self.uio.command("create_account Alice alicespw Administrator")
         self.uio.command("create_account Eve evespw Instructor")

@@ -1,7 +1,7 @@
-from DB_interface import DBConnect
+from ta_app.DB_interface import DBConnect
 import os.path
-from account_object import Account
-from course_object import Course
+from ta_app.account_object import Account
+from ta_app.course_object import Course
 
 
 class DBConnection(DBConnect):

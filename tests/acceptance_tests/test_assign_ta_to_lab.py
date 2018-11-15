@@ -1,11 +1,11 @@
 import unittest as ut
-from ui import self
+from ta_app.ui import UI
 
 
 class TestAssignTaToLab(ut.TestCase):
 
     def setUp(self):
-        self.ui = self()
+        self.ui = UI()
 
     def testSuccessfulAssign(self):
         self.ui.command("login defaultuser defaultpassword")
