@@ -1,0 +1,6 @@
+Format: (courses)
+<name>, <section>, <day>, <times> <instructor>, <ta>, <lab>, <labsection>
+Example:	
+CS101, 100, Tuesday, Wednesday, 700, 1100, Professor1, TAassistant1, 101, 102
+CS101, 100, Tuesday, Wednesday, 700, 1100, Professor1, TAassistant2, 101, 103
+CS250, 101, Monday, Friday, 1900, 1600, Professor1, TAssistant2, 103, 104

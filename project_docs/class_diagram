@@ -1,0 +1,51 @@
+UI
+	current_user 		- mem
+	input_command 		- fun
+	connect_db		- fun
+	disconnect_db		- fun
+	help			- fun
+	login			- fun
+	logout			- fun
+	create_course		- fun
+	create_account		- fun
+	delete_account		- fun
+	edit_account		- fun
+	send_notification	- fun
+	assign_instructor	- fun
+	assign_ta_to_course	- fun
+	assign_ta_to_lab	- fun
+	edit_system_data	- fun
+	edit_contact_info	- fun
+	view_ta_assignments	- fun
+	view_course_assignments - fun
+	read_contact_info	- fun
+
+course object
+	name 			- mem
+	section 		- mem
+	days of week 		- mem
+	times 			- mem
+	instructor 		- mem
+	TAs 			- mem
+	lab 			- mem
+	lab sections 		- mem
+	__str__			- fun
+
+account object
+	user name 		- mem
+	password 		- mem
+	role (permissions) 	- mem
+	__str__			- fun
+
+db_connect_object
+    is_connected    - mem
+    db_path         - mem
+    db_object       - mem
+    add_course      - fun
+    remove_course   - fun
+    edit_course     - fun
+    get_courses     - fun
+    add_account     - fun
+    remove_account  - fun
+    edit_account    - fun
+    get_accounts    - fun
