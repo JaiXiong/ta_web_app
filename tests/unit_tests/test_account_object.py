@@ -12,7 +12,7 @@ class TestAccountObject(ut.TestCase):
     # tests setting password property
     def test_account2(self):
         ac = Account("test2User", "test2Password", "Supervisor")
-        self.assertEqual(ac.password, "test2password")
+        self.assertEqual(ac.password, "test2Password")
 
     # tests setting role property
     def test_account3(self):
@@ -21,7 +21,7 @@ class TestAccountObject(ut.TestCase):
 
     # tests a blank username
     def test_account4(self):
-        ac = Account("", "test4Password", "Supervisor")
+        ac = Account("test4User", "test4Password", "Supervisor")
         with self.assertRaises(ValueError):
             ac.user = ""
 
