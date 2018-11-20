@@ -79,22 +79,16 @@ class UI:
             return 'Failed to create account. Insufficient permissions'
         if psuser == "" or pspassword == "" or psrole == "":
             return 'Failed to create account. Invalid or missing argument'
-        new_account = Account()
-        new_account.user = psuser
-        new_account.password = pspassword
-        new_account.role = psrole
+        new_account = Account(psuser, pspassword, psrole)
         self.accountsDB.add_account(new_account)
         return 'Successfully created account'
 
     def delete_account(self, psuser="", pspassword="", psrole=""):
         if self.get_current_user() != 'default_superuser':
             return 'Failed to delete account. Insufficient permissions'
-        if psuser == "":
+        if psuser == '':
             return 'Failed to delete account. Invalid or missing argument'
-        ac = Account()
-        ac.user = psuser
-        ac.password = pspassword
-        ac.role = psrole
+        ac = Account(psuser, pspassword, psrole)
         result = self.accountsDB.remove_account(ac)
         if not result:
             return "Failed to delete account. User not found"
