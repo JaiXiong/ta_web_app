@@ -42,31 +42,37 @@ class TestSuperuserLogin(ut.TestCase):
     # check login when role of superuser for any reason is not 'superuser'
     # makes call to Superuser check_role, checks wrong condition
     def test_wrongRole(self):
-        self.assertFalse(self.super.check_role("supervisor"))
+        response = "Invalid role"
+        self.assertEqual(response, self.super.check_role("supervisor"))
 
     # check login when role of superuser is superuser
     # makes call to Superuser check_role, checks right condition
     def test_rightRole(self):
-        self.assertTrue(self.super.check_role("default_superuser"))
+        response = "superuser"
+        self.assertTrue(response, self.super.check_role("default_superuser"))
 
     # check login when username entered is wrong
     # makes call to Superuser check_name, checks wrong condition
     def test_wrongName(self):
+        response = "Invalid username"
         self.user.set_role = "new_superuser"
-        self.assertFalse(self.super.check_name("new_superuser"))
+        self.assertFalse(response, self.super.check_name("new_superuser"))
 
     # check login when username entered is correct
     # makes call to Superuser check_name, checks right condition
     def test_rightName(self):
+        response = "default_superuser"
         self.assertTrue(self.super.check_name("default_superuser"))
 
     # check login when password is entered wrong
     # makes call to Superuser check_password, checks wrong condition
     def test_wrongPass(self):
+        response = "Invalid password"
         self.user.set_password = "new_password"
-        self.assertFalse(self.super.check_password("new_password"))
+        self.assertFalse(response, self.super.check_password("new_password"))
 
     # check login when password is entered correct
     # makes call to Superuser check_password, checks right condition
     def test_rightPass(self):
-        self.assertTrue(self.super.check_password("default_password"))
+        response = "default_password"
+        self.assertTrue(response, self.super.check_password("default_password"))
