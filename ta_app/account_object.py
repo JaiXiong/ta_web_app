@@ -1,4 +1,7 @@
-class Account:
+from ta_app.account_object_interface import Account
+
+
+class Account(Account):
     __user = ""
     __password = ""
     __role = ""
