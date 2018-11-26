@@ -2,7 +2,6 @@ from django.db import models
 from ta_app.course_interface import ICourse
 
 
-
 class Account(models.Model):
     user = models.CharField(max_length=20)
     password = models.CharField(max_length=20)
