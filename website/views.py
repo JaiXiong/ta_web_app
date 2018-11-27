@@ -7,8 +7,6 @@ from ta_app.commands import Commands
 
 
 class Home(View):
-    superuser = Account(user="SuperUser", password="SuperUserPW", role="Supervisor")
-    superuser.save()
     ui = Commands()
 
     def get(self, request):
