@@ -53,16 +53,27 @@ class Commands(CommandsInterface):
         new_account.save()
         return 'Successfully created account'
 
-    def delete_account(self, user):
+    def delete_account(self, username=''):
+        if username == '':
+            return 'Failed to delete account. Invalid or missing argument'
+
+        account_to_delete = self.get_account(username)
+        cur_user_role = self.get_current_user().role
+        if cur_user_role != 'Supervisor' and cur_user_role != 'Administrator':
+            return 'Failed to delete account. Insufficient permissions'
+        if cur_user_role == 'Administrator' and account_to_delete.role == 'Supervisor':
+            return 'Failed to delete account. Insufficient permissions'
+        if account_to_delete.id is None:
+            return 'Failed to delete account. User not found'
+
+        account_to_delete.delete()
+        return 'Successfully deleted account'
+
+    def edit_account(self, username, password, role, street_address, email_address, phone_number):
         return ''
 
-    def edit_account(self, user):
-        return ''
-
-    def create_course(self, name, section, days, time, labs):
-        exist_count1 = Course.objects.filter(name=name).count()
-
-        if name is None or section is None or days is None or time is None or labs is None:
+    def create_course(self, name="", section="", days="", time="", labs=""):
+        if name == "" or section == "" or days == "" or time == "" or labs == "":
             return "Please input valid arguments for all fields to create a course"
         else:
             d = days.split("/")
@@ -81,8 +92,8 @@ class Commands(CommandsInterface):
                 if len(lab) > 3 or not lab.isnumeric():
                     valid2 = False
 
-            if exist_count1 > 1:
-                return "Course " + name + " - " + section + " already exists in the data base."
+            if Course.objects.filter(name=name).exists():
+                return "Course " + name + " - " + section + " already exists in the data base"
             elif len(section) > 3 or not section.isnumeric():
                 return "Section must be a three digit number"
             elif not valid1:
@@ -106,19 +117,92 @@ class Commands(CommandsInterface):
             return "Course " + name + " has been added to the data base."
 
     def assign_instructor(self, user, course):
-        return ''
+        cur_user_role = self.get_current_user().role
+        if cur_user_role != "Supervisor":
+            return "You do not have permissions to assign instructors to courses"
+
+        if not Account.objects.filter(user=user).exists():
+            return "This user is not present in the data base"
+
+        if not Course.objects.filter(name=course).exists():
+            return "This course is not present in the data base"
+        else:
+            this_course = Course.objects.get(name=course)
+            account = Account.objects.get(user=user)
+            instructors_courses = Course.objects.filter(instructor=account)
+            if instructors_courses is not None:
+                these_days = this_course.days_of_week.split("/")
+                this_st = this_course.start_time.replace(":", "")
+                this_et = this_course.end_time.replace(":", "")
+                for c in instructors_courses:
+                    those_days = c.days_of_week.split("/")
+                    for d in these_days:
+                        for cd in those_days:
+                            if cd == d:
+                                those_st = c.start_time.replace(":", "")
+                                those_et = c.end_time.replace(":", "")
+
+                                if self.overlap(this_st, this_et, those_st, those_et):
+                                    return "This course conflicts with the instructor's current schedule"
+            this_course.instructor = account
+            this_course.save()
+            return user + " has been added to as " + course + "'s instructor"
 
     def assign_ta_to_course(self, user, course):
-        return ''
+        cur_user_role = self.get_current_user().role
+        if cur_user_role != "Supervisor":
+            return "You do not have permissions to assign TAs to courses"
+        if not Account.objects.filter(user=user).exists():
+            return "This user is not present in the data base"
+        if not Course.objects.filter(name=course).exists():
+            return "This course is not present in the data base"
+        else:
+            this_course = Course.objects.get(name=course)
+            account = Account.objects.get(user=user)
+            tas_courses = Course.objects.filter(tas=account)
+            if tas_courses is not None:
+                these_days = this_course.days_of_week.split("/")
+                this_st = this_course.start_time.replace(":", "")
+                this_et = this_course.end_time.replace(":", "")
+                for c in tas_courses:
+                    those_days = c.days_of_week.split("/")
+                    for d in these_days:
+                        for cd in those_days:
+                            if cd == d:
+                                those_st = c.start_time.replace(":", "")
+                                those_et = c.end_time.replace(":", "")
+                                if self.overlap(this_st, this_et, those_st, those_et):
+                                    return "This course conflicts with the TA's current schedule"
+            this_course.tas.add(account)
+            this_course.save()
+            return user + " has been added as a TA to " + course
 
     def assign_ta_to_lab(self, user, course, lab):
         return ''
 
     def view_course_assignments(self):
-        return ''
+        if self.current_user.user == "":
+            return "Failed to view course assignments. No current user"
+        if self.current_user.role == "TA":
+            return 'Failed to view course assignments. Insufficient permissions'
+        output = ""
+        course_list = list(Course.objects.all())
+        for course in course_list:
+            if course.instructor is not None:
+                output += "<p>Course: " + course.name + ", Instructor: " + course.instructor.user + "</p><br />"
+        return output
 
     def view_ta_assignments(self):
-        return ''
+        if self.current_user.user == "":
+            return "Failed to view ta assignments. No current user"
+        output = ""
+        course_list = list(Course.objects.all())
+        for course in course_list:
+            if course.instructor is not None and course.tas is not None:
+                ta_list = list(course.tas.all())
+                output += "<p>Course: " + course.name + ", Section: " + \
+                          course.section + ", TA(s): [" + ta_list + "]</p><br />"
+        return output
 
     def read_contact_info(self):
         return ''
@@ -129,15 +213,37 @@ class Commands(CommandsInterface):
     def help(self):
         commands = '<ol>'
         for i in self.command_list.keys():
-            commands += "<li>" + i + "</li>"
-            commands += '\n'
-        return commands + "</ol>"
+            commands += '<li><b>' + i + '</b>'
+            if i == 'login':
+                commands += '&nbsp &ltusername&gt &nbsp&ltpassword&gt'
+            elif i == 'create_account':
+                commands += '&nbsp &ltusername&gt &nbsp&ltpassword&gt &nbsp&ltrole&gt'
+            elif i == 'delete_account':
+                commands += '&nbsp &ltusername&gt'
+            elif i == 'create_course':
+                commands += ' &nbsp&ltname&gt &nbsp&ltsection&gt &nbsp&ltdays&gt &nbsp&lttimes&gt &nbsp&ltlabs&gt'
+            elif i == 'assign_instructor':
+                commands += ' &nbsp&ltusername&gt &nbsp&ltcourse&gt'
+            elif i == 'assign_ta_to_course':
+                commands += ' &nbsp&ltusername&gt &nbsp&ltcourse&gt'
+            elif i == 'assign_ta_to_lab':
+                commands += ' &nbsp&ltusername&gt &nbsp&ltcourse&gt &nbsp&ltlab&gt'
+            elif i == 'edit_account':
+                commands += ' &nbsp&ltusername&gt &nbsp&ltpassword&gt &nbsp&ltrole&gt ' \
+                            '&nbsp&ltstreet_address&gt &nbsp&ltemail&gt &nbsp&ltphone&gt'
+            commands += '</li>\n'
+        return commands + '</ol>'
 
     def call_command(self, user_input):
-        params = user_input.split()
-        call = params[0]
-        args = params[1:len(params)]
-        return self.command_list.get(call, lambda *_: "ERROR: this is not an available command")(*args)
+        try:
+            params = user_input.split()
+            call = params[0]
+            args = params[1:len(params)]
+            return self.command_list.get(call, lambda *_: "ERROR: this is not an available command")(*args)
+        except IndexError:
+            return 'You should type something...'
+        except TypeError:
+            return 'Too many arguments entered. Try again!'
 
     def get_current_user(self):
         return self.current_user
@@ -147,6 +253,10 @@ class Commands(CommandsInterface):
         if len(accounts) == 1:
             return accounts.__getitem__(0)
         return Account()
+
+    def overlap(self, start1, end1, start2, end2):
+        """Does the range (start1, end1) overlap with (start2, end2)?"""
+        return end1 >= start2 and end2 >= start1
 
     def set_command_list(self):
         if self.current_user.id is None:

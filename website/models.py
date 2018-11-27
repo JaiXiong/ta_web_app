@@ -16,7 +16,7 @@ class Course(models.Model):
     section = models.CharField(max_length=3)
     days_of_week = models.CharField(max_length=8)
     start_time = models.CharField(max_length=5)
-    end_time = models.CharField(max_length=3)
+    end_time = models.CharField(max_length=5)
     instructor = models.ForeignKey(Account, related_name="instructor", on_delete=models.CASCADE, null=True)
     tas = models.ManyToManyField(Account, related_name="tas", blank=True)
     lab = models.CharField(max_length=3, null=True)
