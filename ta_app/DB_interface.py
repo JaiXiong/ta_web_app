@@ -1,6 +1,5 @@
 import abc
-from ta_app.course_object import Course
-from ta_app.account_object import Account
+from website.models import Course, Account
 
 
 class DBConnect(abc.ABC):

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views import View
 from ta_app.commands_interface import CommandsInterface
 
 
@@ -9,5 +10,6 @@ class Home(View):
         return render(request, "website/index.html")
 
     def post(self, request):
-        out = doStuff(request.POST["command"], commandList)
+        out = ""
+        #out = doStuff(request.POST["command"], commandList)
         return render(request, "website/index.html", {"out": out})
