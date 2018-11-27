@@ -172,7 +172,7 @@ class TestCommands(ut.TestCase):
         self.assertEqual(created_account.password, password)
         self.assertEqual(created_account.role, role)
 
-    def test_create_account_as_administrator_(self):
+    def test_create_account_as_administrator(self):
         self.ui.login('usrAdministrator', 'password')
         username = 'tstCreatSupervisor'
         password = 'password'
@@ -236,4 +236,7 @@ class TestCommands(ut.TestCase):
         self.assertEqual(initial_count, final_count)
 
     def test_delete_account_as_supervisor(self):
-        pass
+        self.ui.login('usrSupervisor', 'password')
+        cur_user = self.ui.current_user
+        self.assertIsNotNone(cur_user.id)
+

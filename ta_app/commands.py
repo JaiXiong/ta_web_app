@@ -59,8 +59,51 @@ class Commands(CommandsInterface):
     def edit_account(self, user):
         return ''
 
-    def create_course(self, name, section, days, times, labs):
-        return ''
+    def create_course(self, name, section, days, time, labs):
+        exist_count1 = Course.objects.filter(name=name).count()
+
+        if name is None or section is None or days is None or time is None or labs is None:
+            return "Please input valid arguments for all fields to create a course"
+        else:
+            d = days.split("/")
+            valid1 = True
+            for day in d:
+                if day not in ["M", "T", "W", "R", "F", "S", "U", "O"]:
+                    valid1 = False
+
+            times = time.split("-")
+            stl = times[0].split(":")
+            etl = times[1].split(":")
+
+            valid2 = True
+            ls = labs.split("/")
+            for lab in ls:
+                if len(lab) > 3 or not lab.isnumeric():
+                    valid2 = False
+
+            if exist_count1 > 1:
+                return "Course " + name + " - " + section + " already exists in the data base."
+            elif len(section) > 3 or not section.isnumeric():
+                return "Section must be a three digit number"
+            elif not valid1:
+                return "Days of week are noted as M, T, W, R, F, S, U, O"
+            elif len(times[0]) > 5 or int(stl[0]) > 23 or int(stl[1]) > 59:
+                return "valid start time is 00:00 to 23:59"
+            elif len(times[1]) > 5 or int(etl[0]) > 23 or int(etl[1]) > 59:
+                return "valid end time is 00:00 to 23:59"
+            elif stl[0] > etl[0] or (stl[0] == etl[0] and stl[1] > etl[1]):
+                return "end time can not be earlier than start time"
+            elif not valid2:
+                return "Lab sections must be a three digit number"
+            else:
+                o = Course(name=name,
+                           section=section,
+                           days_of_week=days,
+                           start_time=times[0],
+                           end_time=times[1],
+                           lab_sections=labs)
+                o.save()
+            return "Course " + name + " has been added to the data base."
 
     def assign_instructor(self, user, course):
         return ''
