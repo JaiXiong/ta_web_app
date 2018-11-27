@@ -91,7 +91,10 @@ class Commands(CommandsInterface):
         for course in course_list:
             if course.instructor is not None and course.tas is not None:
                 ta_list = list(course.tas.all())
-                output += "<p>Course: " + course.name + ", Section: " + course.section + ", TA(s): [" + ta_list + "]</p><br />"
+                ta_str = ""
+                for ta in ta_list:
+                    ta_str += ta.user + " "
+                output += "<p>Course: " + course.name + ", Section: " + course.section + ", TA(s): " + ta_str + "</p><br />"
         return output
 
     def read_contact_info(self):

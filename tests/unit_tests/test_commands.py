@@ -367,9 +367,9 @@ class TestCommands(ut.TestCase):
                              instructor=self.tst_instructor,
                              lab="333",
                              lab_sections="444")
-        test_course.tas.add(self.tst_ta)
         test_course.save()
-        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + "</p><br />"
+        test_course.tas.add(self.tst_ta)
+        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + " </p><br />"
         actual_output = self.ui.view_ta_assignments()
         self.assertEqual(expected_output, actual_output)
 
@@ -383,9 +383,9 @@ class TestCommands(ut.TestCase):
                              instructor=self.tst_instructor,
                              lab="333",
                              lab_sections="444")
-        test_course.tas.add(self.tst_ta)
         test_course.save()
-        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + "</p><br />"
+        test_course.tas.add(self.tst_ta)
+        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + " </p><br />"
         actual_output = self.ui.view_ta_assignments()
         self.assertEqual(expected_output, actual_output)
 
@@ -399,9 +399,9 @@ class TestCommands(ut.TestCase):
                              instructor=self.tst_instructor,
                              lab="333",
                              lab_sections="444")
-        test_course.tas.add(self.tst_ta)
         test_course.save()
-        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + "</p><br />"
+        test_course.tas.add(self.tst_ta)
+        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + " </p><br />"
         actual_output = self.ui.view_ta_assignments()
         self.assertEqual(expected_output, actual_output)
 
@@ -415,9 +415,9 @@ class TestCommands(ut.TestCase):
                              instructor=self.tst_instructor,
                              lab="333",
                              lab_sections="444")
-        test_course.tas.add(self.tst_ta)
         test_course.save()
-        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + "</p><br />"
+        test_course.tas.add(self.tst_ta)
+        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + " </p><br />"
         actual_output = self.ui.view_ta_assignments()
         self.assertEqual(expected_output, actual_output)
 
@@ -433,10 +433,10 @@ class TestCommands(ut.TestCase):
                              instructor=self.tst_instructor,
                              lab="333",
                              lab_sections="444")
+        test_course.save()
         test_course.tas.add(self.tst_ta)
         test_course.tas.add(test_ta2)
-        test_course.save()
-        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): [" + self.tst_ta.user + ", " + test_ta2.user + "]</p><br />"
+        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + " " + test_ta2.user + " </p><br />"
         actual_output = self.ui.view_ta_assignments()
         self.assertEqual(expected_output, actual_output)
 
@@ -452,6 +452,7 @@ class TestCommands(ut.TestCase):
                              instructor=self.tst_instructor,
                              lab="333",
                              lab_sections="444")
+        test_course.save()
         test_course.tas.add(self.tst_ta)
         test_course2 = Course(name="CS104",
                               section="223",
@@ -461,10 +462,10 @@ class TestCommands(ut.TestCase):
                               instructor=self.tst_instructor,
                               lab="363",
                               lab_sections="474")
+        test_course2.save()
         test_course2.tas.add(test_ta2)
-        test_course.save()
-        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): [" + self.tst_ta.user + "]</p><br />" + \
-                          "<p>Course: " + test_course2.name + ", Section: " + test_course2.section + ", TA(s): [" + test_ta2.user + "]</p><br />"
+        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + " </p><br />" + \
+                          "<p>Course: " + test_course2.name + ", Section: " + test_course2.section + ", TA(s): " + test_ta2.user + " </p><br />"
         actual_output = self.ui.view_ta_assignments()
         self.assertEqual(expected_output, actual_output)
 
