@@ -7,6 +7,10 @@ from website.models import Account, Course
 class TestCommands(ut.TestCase):
 
     def setUp(self):
+        for i in Account.objects.all():
+            i.delete()
+        for i in Course.objects.all():
+            i.delete()
         self.ui = Commands()
         self.tst_supervisor = Account(user='usrSupervisor', password='password', role='Supervisor')
         self.tst_administrator = Account(user='usrAdministrator', password='password', role='Administrator')
@@ -25,6 +29,8 @@ class TestCommands(ut.TestCase):
 
     def tearDown(self):
         for i in self.test_accounts:
+            i.delete()
+        for i in Course.objects.all():
             i.delete()
 
     def testCallCommandValid(self):
@@ -237,3 +243,228 @@ class TestCommands(ut.TestCase):
 
     def test_delete_account_as_supervisor(self):
         pass
+
+#=================================================================
+    def test_view_course_assignments_no_user(self):
+        expected_output = "Failed to view course assignments. No current user"
+        actual_output = self.ui.view_course_assignments()
+        self.assertEqual(expected_output, actual_output)
+
+    def test_view_course_assignments_as_ta(self):
+        self.ui.login('usrTA', 'password')
+        expected_output = "Failed to view course assignments. Insufficient permissions"
+        actual_output = self.ui.view_course_assignments()
+        self.assertEqual(expected_output, actual_output)
+
+    def test_view_course_assignments_as_instructor(self):
+        self.ui.login('usrInstructor', 'password')
+        test_course = Course(name="CS103",
+                             section="222",
+                             days_of_week="M/W/F",
+                             start_time="12:00",
+                             end_time="13:00",
+                             instructor=self.tst_instructor,
+                             lab="333",
+                             lab_sections="444")
+        test_course.save()
+        expected_output = "<p>Course: " + test_course.name + ", Instructor: " + self.tst_instructor.user+"</p><br />"
+        actual_output = self.ui.view_course_assignments()
+        self.assertEqual(expected_output, actual_output)
+
+    def test_view_course_assignments_as_supervisor(self):
+        self.ui.login('usrSupervisor', 'password')
+        test_course = Course(name="CS103",
+                             section="222",
+                             days_of_week="M/W/F",
+                             start_time="12:00",
+                             end_time="13:00",
+                             instructor=self.tst_instructor,
+                             lab="333",
+                             lab_sections="444")
+        test_course.save()
+        expected_output = "<p>Course: " + test_course.name + ", Instructor: " + self.tst_instructor.user + "</p><br />"
+        actual_output = self.ui.view_course_assignments()
+        self.assertEqual(expected_output, actual_output)
+
+    def test_view_course_assignments_as_Administrator(self):
+        self.ui.login('usrAdministrator', 'password')
+        test_course = Course(name="CS103",
+                             section="222",
+                             days_of_week="M/W/F",
+                             start_time="12:00",
+                             end_time="13:00",
+                             instructor=self.tst_instructor,
+                             lab="333",
+                             lab_sections="444")
+        test_course.save()
+        expected_output = "<p>Course: " + test_course.name + ", Instructor: " + self.tst_instructor.user + "</p><br />"
+        actual_output = self.ui.view_course_assignments()
+        self.assertEqual(expected_output, actual_output)
+
+    def test_view_course_assignments_multiple_courses_multiple_instructors_as_administrator(self):
+        self.ui.login('usrAdministrator', 'password')
+        test_instructor2 = Account(user='usrInstructor2', password='password', role='Instructor')
+        test_instructor2.save()
+        test_course1 = Course(name="CS103",
+                              section="222",
+                              days_of_week="M/W/F",
+                              start_time="12:00",
+                              end_time="13:00",
+                              instructor=self.tst_instructor,
+                              lab="333",
+                              lab_sections="444")
+        test_course1.save()
+        test_course2 = Course(name="CS104",
+                              section="223",
+                              days_of_week="M/W/F",
+                              start_time="14:00",
+                              end_time="15:00",
+                              instructor=test_instructor2,
+                              lab="363",
+                              lab_sections="474")
+        test_course2.save()
+        expected_output = "<p>Course: " + test_course1.name + ", Instructor: " + self.tst_instructor.user + "</p><br />" + \
+                          "<p>Course: " + test_course2.name + ", Instructor: " + test_instructor2.user + "</p><br />"
+        actual_output = self.ui.view_course_assignments()
+        self.assertEqual(expected_output, actual_output)
+
+    def test_view_course_assignments_no_instructor_as_administrator(self):
+        self.ui.login('usrAdministrator', 'password')
+        test_course = Course(name="CS103",
+                             section="222",
+                             days_of_week="M/W/F",
+                             start_time="12:00",
+                             end_time="13:00",
+                             lab="333",
+                             lab_sections="444")
+        test_course.save()
+        test_course2 = Course(name="CS104",
+                              section="223",
+                              days_of_week="M/W/F",
+                              start_time="14:00",
+                              end_time="15:00",
+                              instructor=self.tst_instructor,
+                              lab="363",
+                              lab_sections="474")
+        test_course2.save()
+        expected_output = "<p>Course: " + test_course2.name + ", Instructor: " + self.tst_instructor.user + "</p><br />"
+        actual_output = self.ui.view_course_assignments()
+        self.assertEqual(expected_output, actual_output)
+
+#=====================================================================
+    def test_view_ta_assignments_no_user(self):
+        expected_output = "Failed to view ta assignments. No current user"
+        actual_output = self.ui.view_ta_assignments()
+        self.assertEqual(expected_output, actual_output)
+
+    def test_view_ta_assignments_single_ta_single_course_as_ta(self):
+        self.ui.login("usrTA", "password")
+        test_course = Course(name="CS103",
+                             section="222",
+                             days_of_week="M/W/F",
+                             start_time="12:00",
+                             end_time="13:00",
+                             instructor=self.tst_instructor,
+                             lab="333",
+                             lab_sections="444")
+        test_course.tas.add(self.tst_ta)
+        test_course.save()
+        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + "</p><br />"
+        actual_output = self.ui.view_ta_assignments()
+        self.assertEqual(expected_output, actual_output)
+
+    def test_view_ta_assignments_single_ta_single_course_as_instructor(self):
+        self.ui.login("usrInstructor", "password")
+        test_course = Course(name="CS103",
+                             section="222",
+                             days_of_week="M/W/F",
+                             start_time="12:00",
+                             end_time="13:00",
+                             instructor=self.tst_instructor,
+                             lab="333",
+                             lab_sections="444")
+        test_course.tas.add(self.tst_ta)
+        test_course.save()
+        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + "</p><br />"
+        actual_output = self.ui.view_ta_assignments()
+        self.assertEqual(expected_output, actual_output)
+
+    def test_view_ta_assignments_single_ta_single_course_as_supervisor(self):
+        self.ui.login("usrSupervisor", "password")
+        test_course = Course(name="CS103",
+                             section="222",
+                             days_of_week="M/W/F",
+                             start_time="12:00",
+                             end_time="13:00",
+                             instructor=self.tst_instructor,
+                             lab="333",
+                             lab_sections="444")
+        test_course.tas.add(self.tst_ta)
+        test_course.save()
+        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + "</p><br />"
+        actual_output = self.ui.view_ta_assignments()
+        self.assertEqual(expected_output, actual_output)
+
+    def test_view_ta_assignments_single_ta_single_course_as_administrator(self):
+        self.ui.login("usrAdministrator", "password")
+        test_course = Course(name="CS103",
+                             section="222",
+                             days_of_week="M/W/F",
+                             start_time="12:00",
+                             end_time="13:00",
+                             instructor=self.tst_instructor,
+                             lab="333",
+                             lab_sections="444")
+        test_course.tas.add(self.tst_ta)
+        test_course.save()
+        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + "</p><br />"
+        actual_output = self.ui.view_ta_assignments()
+        self.assertEqual(expected_output, actual_output)
+
+    def test_view_ta_assignments_multiple_ta_single_course_as_ta(self):
+        self.ui.login("usrTA", "password")
+        test_ta2 = Account(user="TA2", password="password", role="TA")
+        test_ta2.save()
+        test_course = Course(name="CS103",
+                             section="222",
+                             days_of_week="M/W/F",
+                             start_time="12:00",
+                             end_time="13:00",
+                             instructor=self.tst_instructor,
+                             lab="333",
+                             lab_sections="444")
+        test_course.tas.add(self.tst_ta)
+        test_course.tas.add(test_ta2)
+        test_course.save()
+        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): [" + self.tst_ta.user + ", " + test_ta2.user + "]</p><br />"
+        actual_output = self.ui.view_ta_assignments()
+        self.assertEqual(expected_output, actual_output)
+
+    def test_view_ta_assignments_single_ta_multiple_course_as_ta(self):
+        self.ui.login("usrTA", "password")
+        test_ta2 = Account(user="TA2", password="password", role="TA")
+        test_ta2.save()
+        test_course = Course(name="CS103",
+                             section="222",
+                             days_of_week="M/W/F",
+                             start_time="12:00",
+                             end_time="13:00",
+                             instructor=self.tst_instructor,
+                             lab="333",
+                             lab_sections="444")
+        test_course.tas.add(self.tst_ta)
+        test_course2 = Course(name="CS104",
+                              section="223",
+                              days_of_week="M/W/F",
+                              start_time="14:00",
+                              end_time="15:00",
+                              instructor=self.tst_instructor,
+                              lab="363",
+                              lab_sections="474")
+        test_course2.tas.add(test_ta2)
+        test_course.save()
+        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): [" + self.tst_ta.user + "]</p><br />" + \
+                          "<p>Course: " + test_course2.name + ", Section: " + test_course2.section + ", TA(s): [" + test_ta2.user + "]</p><br />"
+        actual_output = self.ui.view_ta_assignments()
+        self.assertEqual(expected_output, actual_output)
+

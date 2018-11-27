@@ -72,10 +72,27 @@ class Commands(CommandsInterface):
         return ''
 
     def view_course_assignments(self):
-        return ''
+        if self.current_user.user == "":
+            return "Failed to view course assignments. No current user"
+        if self.current_user.role == "TA":
+            return 'Failed to view course assignments. Insufficient permissions'
+        output = ""
+        course_list = list(Course.objects.all())
+        for course in course_list:
+            if course.instructor is not None:
+                output += "<p>Course: " + course.name + ", Instructor: " + course.instructor.user + "</p><br />"
+        return output
 
     def view_ta_assignments(self):
-        return ''
+        if self.current_user.user == "":
+            return "Failed to view ta assignments. No current user"
+        output = ""
+        course_list = list(Course.objects.all())
+        for course in course_list:
+            if course.instructor is not None and course.tas is not None:
+                ta_list = list(course.tas.all())
+                output += "<p>Course: " + course.name + ", Section: " + course.section + ", TA(s): [" + ta_list + "]</p><br />"
+        return output
 
     def read_contact_info(self):
         return ''

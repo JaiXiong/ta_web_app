@@ -117,3 +117,7 @@ class TestDBSqlLite(TestCase):
         self.assertFalse(self.db_connection.remove_course(course2))
 
 
+
+
+
+
