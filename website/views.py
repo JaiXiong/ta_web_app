@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.views import View
-from website.models import Course, Account
 from ta_app.commands import Commands
 
 # Create your views here.
