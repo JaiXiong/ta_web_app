@@ -53,7 +53,7 @@ class Commands(CommandsInterface):
         new_account.save()
         return 'Successfully created account'
 
-    def delete_account(self, user, password, role):
+    def delete_account(self, user):
         return ''
 
     def edit_account(self, user):
@@ -127,11 +127,11 @@ class Commands(CommandsInterface):
         return ''
 
     def help(self):
-        commands = ''
+        commands = '<ol>'
         for i in self.command_list.keys():
-            commands += i
+            commands += "<li>" + i + "</li>"
             commands += '\n'
-        return commands
+        return commands + "</ol>"
 
     def call_command(self, user_input):
         params = user_input.split()

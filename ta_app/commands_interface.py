@@ -16,7 +16,7 @@ class CommandsInterface(abc.ABC):
         return ''
 
     @abc.abstractmethod
-    def delete_account(self, user, password, role):
+    def delete_account(self, user):
         return ''
 
     @abc.abstractmethod
