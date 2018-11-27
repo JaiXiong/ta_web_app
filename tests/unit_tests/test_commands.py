@@ -214,10 +214,13 @@ class TestCommands(ut.TestCase):
         username = 'tstCreatTA'
         password = 'password'
         role = 'TA'
+        initial_count = Account.objects.count()
         expected_output = 'Failed to create account. Insufficient permissions'
         actual_output = self.ui.create_account(username, password, role)
-        self.assertEqual(expected_output, actual_output)
+        final_count = Account.objects.count()
         created_account = self.ui.get_account(username)
+        self.assertEqual(expected_output, actual_output)
+        self.assertEqual(initial_count, final_count)
         self.assertIsNone(created_account.id)
 
     def test_create_account_existing_user(self):
@@ -226,10 +229,11 @@ class TestCommands(ut.TestCase):
         password = 'password'
         role = 'TA'
         expected_output = 'Failed to create account. User already exists'
+        initial_count = Account.objects.count()
         actual_output = self.ui.create_account(username, password, role)
+        final_count = Account.objects.count()
         self.assertEqual(expected_output, actual_output)
-        created_account = self.ui.get_account(username)
-        self.assertIsNone(created_account.id)
+        self.assertEqual(initial_count, final_count)
 
     def test_delete_account_as_supervisor(self):
         pass

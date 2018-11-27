@@ -6,9 +6,9 @@ class Account(models.Model):
     user = models.CharField(max_length=20)
     password = models.CharField(max_length=20)
     role = models.CharField(max_length=17)
-    street_address = models.CharField(max_length=35, null=True)
-    email_address = models.EmailField(max_length=30, null=True)
-    phone_number = models.CharField(max_length=12, null=True)
+    street_address = models.CharField(max_length=35, blank=True)
+    email_address = models.EmailField(max_length=30, blank=True)
+    phone_number = models.CharField(max_length=12, blank=True)
 
 
 class Course(models.Model):
