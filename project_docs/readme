@@ -1,28 +1,78 @@
 
 Operations:
-  1.) Run driver.py
-  2.) To login with the default super user
-    a.) Enter "login default_superuser default_password"
-    b.) A successful login will output:
-          login as default_superuser
-          login successful...
-  3.) To create an account as the default super user
+  1.) Run ta_app to launch website.
+  2.) To login with the default super user 
+    a.) Enter login superuser password at the Django admin page
+    b.) Click view site to get to Website app for the command page
+  3.) Enter into the command line "help"
+    a.) Expected information: 
+            login <username> <password>
+            help
+  4.) Login as a super user
+    a.) Enter login super pass (already stored in the database for testing purposes)
+    b.) A successful account creation will output:
+            login successful...
+  4.) To create an account
     a.) Enter "create_account <username> <password> <role>"
-    b) <role> uses the following formats: "Supervisor", "Administrator", "Instructor", "TA"
-  4.) To remove an account as the default super user
-    a.) Enter "remove_account <user> <password> <role>"
-    b.) <role> uses the following formats: "Supervisor", "Administrator", "Instructor", "TA"
-  5.) To add a course as the default super user
-    a.) Enter "create_course <name>, <section>, [<days>], <times> <instructor>, [<tas>], <lab>, [<labsections>]"
-    b.) [<days>] uses the following day formats: M, T, W, R, F and are seperated by a forward slash ('/')
+    b.) A successful account creation will output:
+            Sucessfully created account
+        *Roles are Supervisor, Admininstrator, Instructor, TA
+  5.) To create a couse
+    a.) Enter "create_course <name> <section> <days> <time> <labs>
+    b.) Example entry: "create_course <CS101> <502> <TW> <01:00> <102>
+    c.) A sucessful course creation will output:
+          Coutse <name> has been added to the database
+  6.) To assign a instructor
+    a.) Enter "assign_instructor <user> <course>
+    b.) A successful assign instructor will output:
+            <user> has been assigned as <course>'s instructor
+  7.) To create a TA account
+    a.) Follow step #4 but with Role as TA
+  8.) To assign a ta to a course
+    a.) Enter assign_ta_to_course <user> <course>
+    b.) A successful assign ta to course will output:
+            <user> has been added as a TA to <course>
+  9.) To view course assignments
+    a.) Enter view_course_assignments
+    b.) A successful view course assignment will output in this format:
+          Course: CS-545, Instructor: prof3
+          Course: CS-417, Instructor: prof2
+  10.) To view ta assignments
+    a.) Enter view_ta_assignments
+    b.) A successful view ta assignment will output in this format:
+          Course: CS-545, Section: 401, TA(s):
+          Course: CS-417, Section: 401, TA(s):
+  11.) To view help (Supervisor help info if logged in as the test super pass account)
+    a.) Enter help
+    b.) A Successful help will out for Supervisor:
+          1.logout
+          2.create_account  <username>  <password>  <role>
+          3.delete_account  <username>
+          4.edit_account  <username>  <password>  <role>  <street_address>  <email>  <phone>
+          5.create_course  <name>  <section>  <days>  <times>  <labs>
+          6.assign_instructor  <username>  <course>
+          7.assign_ta_to_course  <username>  <course>
+          8.assign_ta_to_lab  <username>  <course>  <lab>
+          9.view_course_assignments
+          10.view_ta_assignments
+          11.edit_contact_info
+          12.read_contact_info
+          13.help
+   12.) To delete an account
+    a.) First repeat step #4 to create a dummy account 
+    b.) Enter delete_account <user>
+    c.) A Successfull delete account will output:
+          Successfully deleted account
+   13.) To log out
+    a.) Enter logout
+    b.) A successful logout will output"
+          logout successful...
+     
     
 Known Bugs:
-  1.) Only works on a Windows installation of PyCharm due to the absolute paths of the Database files within the project
-    a.) Project must be brought into your workspace
-  2.) Entering a blank line will crash the program due to incorrect error handling
-  3.) Entering a command with incorrect parameters will crash the program
-  4.) Succussful login will print duplicate messages to the user
-  5.) Log in attempt with an incorrect username/ password print duplicate warnings to user
+  1.) view ta assignments throw exceptions
+  2.) account roles are not validated before being assigned to course or lab
+  3.) duplicate courses can be created - exception thrown when trying to assign instructor
   
   
   
