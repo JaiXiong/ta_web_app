@@ -44,7 +44,7 @@ class Course:
     def days_of_week(self, d):
         valid = True
         for day in d:
-            if day not in ["M", "T", "W", "R", "F"]:
+            if day not in ["M", "T", "W", "R", "F", "S", "U", "O"]:
                 valid = False
                 raise ValueError("Days of week are noted as M T W R F")
 

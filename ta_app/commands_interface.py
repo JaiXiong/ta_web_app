@@ -4,7 +4,7 @@ import abc
 class CommandsInterface(abc.ABC):
 
     @abc.abstractmethod
-    def login(self, user, password):
+    def login(self, username, password):
         return ''
 
     @abc.abstractmethod
@@ -12,19 +12,19 @@ class CommandsInterface(abc.ABC):
         return ''
 
     @abc.abstractmethod
-    def create_course(self, name, section, days, times, labs):
-        return ''
-
-    @abc.abstractmethod
     def create_account(self, user, password, role):
         return ''
 
     @abc.abstractmethod
-    def delete_account(self, user, password, role):
+    def delete_account(self, user):
         return ''
 
     @abc.abstractmethod
     def edit_account(self, user):
+        return ''
+
+    @abc.abstractmethod
+    def create_course(self, name, section, days, times, labs):
         return ''
 
     @abc.abstractmethod
@@ -40,14 +40,6 @@ class CommandsInterface(abc.ABC):
         return ''
 
     @abc.abstractmethod
-    def read_contact_info(self):
-        return ''
-
-    @abc.abstractmethod
-    def edit_contact_info(self):
-        return ''
-
-    @abc.abstractmethod
     def view_course_assignments(self):
         return ''
 
@@ -56,13 +48,21 @@ class CommandsInterface(abc.ABC):
         return ''
 
     @abc.abstractmethod
+    def read_contact_info(self):
+        return ''
+
+    @abc.abstractmethod
+    def edit_contact_info(self):
+        return ''
+
+    @abc.abstractmethod
     def help(self):
         return ''
 
     @abc.abstractmethod
-    def get_current_user(self):
+    def call_command(self, user_input):
         return ''
 
     @abc.abstractmethod
-    def call_command(self, command, command_list):
+    def get_current_user(self):
         return ''
