@@ -12,39 +12,39 @@ Operations:
     a.) Enter login super pass (already stored in the database for testing purposes)
     b.) A successful account creation will output:
             login successful...
-  4.) To create an account
+  5.) To create an account
     a.) Enter "create_account <username> <password> <role>"
     b.) A successful account creation will output:
             Sucessfully created account
         *Roles are Supervisor, Admininstrator, Instructor, TA
-  5.) To create a couse
+  6.) To create a couse
     a.) Enter "create_course <name> <section> <days> <time> <labs>
     b.) Example entry: "create_course CS101 502 T/W 12:00-13:00 102
     c.) A sucessful course creation will output:
           Course <name> has been added to the database
-  6. To create a instructor
+  7. To create a instructor
     a.) Follow step #4 but with Role as Instructor
-  6.) To assign a instructor
+  8.) To assign a instructor
     a.) Enter "assign_instructor <user> <course>
     b.) A successful assign instructor will output:
             <user> has been assigned as <course>'s instructor
-  7.) To create a TA account
+  9.) To create a TA account
     a.) Follow step #4 but with Role as TA
-  8.) To assign a ta to a course
+  10.) To assign a ta to a course
     a.) Enter assign_ta_to_course <user> <course>
     b.) A successful assign ta to course will output:
             <user> has been added as a TA to <course>
-  9.) To view course assignments
+  11.) To view course assignments
     a.) Enter view_course_assignments
     b.) A successful view course assignment will output in this format:
           Course: CS-545, Instructor: prof3
           Course: CS-417, Instructor: prof2
-  10.) To view ta assignments
+  12.) To view ta assignments
     a.) Enter view_ta_assignments
     b.) A successful view ta assignment will output in this format:
           Course: CS-545, Section: 401, TA(s):
           Course: CS-417, Section: 401, TA(s):
-  11.) To view help (Supervisor help info if logged in as the test super pass account)
+  13.) To view help (Supervisor help info if logged in as the test super pass account)
     a.) Enter help
     b.) A Successful help will out for Supervisor:
           1.logout
@@ -60,12 +60,12 @@ Operations:
           11.edit_contact_info
           12.read_contact_info
           13.help
-   12.) To delete an account
+   14.) To delete an account
     a.) First repeat step #4 to create a dummy account 
     b.) Enter delete_account <user>
     c.) A Successfull delete account will output:
           Successfully deleted account
-   13.) To log out
+   15.) To log out
     a.) Enter logout
     b.) A successful logout will output"
           logout successful...
