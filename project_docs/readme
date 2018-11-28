@@ -19,9 +19,11 @@ Operations:
         *Roles are Supervisor, Admininstrator, Instructor, TA
   5.) To create a couse
     a.) Enter "create_course <name> <section> <days> <time> <labs>
-    b.) Example entry: "create_course <CS101> <502> <TW> <01:00> <102>
+    b.) Example entry: "create_course CS101 502 T/W 12:00-13:00 102
     c.) A sucessful course creation will output:
-          Coutse <name> has been added to the database
+          Course <name> has been added to the database
+  6. To create a instructor
+    a.) Follow step #4 but with Role as Instructor
   6.) To assign a instructor
     a.) Enter "assign_instructor <user> <course>
     b.) A successful assign instructor will output:
