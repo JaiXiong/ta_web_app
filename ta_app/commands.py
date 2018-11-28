@@ -65,6 +65,8 @@ class Commands(CommandsInterface):
             return 'Failed to delete account. Insufficient permissions'
         if account_to_delete.id is None:
             return 'Failed to delete account. User not found'
+        if Course.objects.filter(instructor=account_to_delete).exists():
+            return 'Failed to delete account. User is assigned to a course'
 
         account_to_delete.delete()
         return 'Successfully deleted account'
