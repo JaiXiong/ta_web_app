@@ -2,8 +2,6 @@ from django.shortcuts import render
 from django.views import View
 from ta_app.commands import Commands
 
-# Create your views here.
-
 
 class Home(View):
     ui = Commands()
