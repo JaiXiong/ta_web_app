@@ -240,14 +240,14 @@ class Commands(CommandsInterface):
             commands += '</li>\n'
         return commands + '</ol>'
 
-    def call_command(self, user_input):
+    def call_command(self, user_input=''):
+        if user_input == '':
+            return ''
         try:
             params = user_input.split()
             call = params[0]
             args = params[1:len(params)]
             return self.command_list.get(call, lambda *_: "ERROR: this is not an available command")(*args)
-        except IndexError:
-            return 'You should type something...'
         except TypeError:
             return 'Too many arguments entered. Try again!'
 
