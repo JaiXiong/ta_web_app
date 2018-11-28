@@ -17,6 +17,8 @@ class TestCommands(TestCase):
         self.tst_instructor.save()
         self.tst_ta.save()
 
+        # self.tst_course = Course()
+
     def test_call_command_valid(self):
         self.ui.current_user = Account()
         self.ui.set_command_list()
@@ -294,5 +296,19 @@ class TestCommands(TestCase):
         initial_count = Account.objects.count()
         actual_output = self.ui.delete_account('usrTA')
         final_count = Account.objects.count()
+        self.assertEqual(expected_output, actual_output)
+        self.assertEqual(initial_count, final_count)
+
+    def test_delete_account_assigned_to_course(self):
+        self.ui.login('usrSupervisor', 'password')
+        test_course = Course(name="CS-337", section="004", days_of_week="M/W/F",
+                             start_time="11:00", end_time="11:50", lab_sections="001/002/003")
+        test_course.save()
+        test_course.instructor = self.tst_instructor
+
+        initial_count = Course.objects.count()
+        expected_output = 'Failed to delete account. User is assigned to a course'
+        actual_output = self.ui.delete_account(self.tst_instructor.user)
+        final_count = Course.objects.count()
         self.assertEqual(expected_output, actual_output)
         self.assertEqual(initial_count, final_count)

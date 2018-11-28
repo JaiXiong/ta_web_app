@@ -116,10 +116,12 @@ class Commands(CommandsInterface):
                 o.save()
             return "Course " + name + " has been added to the data base."
 
-    def assign_instructor(self, user, course):
+    def assign_instructor(self, user="", course=""):
         cur_user_role = self.get_current_user().role
         if cur_user_role != "Supervisor":
             return "You do not have permissions to assign instructors to courses"
+        if user == "" or course == "":
+            return "Please input valid arguments for both fields to create assign an instructor to a course"
 
         if not Account.objects.filter(user=user).exists():
             return "This user is not present in the data base"
@@ -146,12 +148,14 @@ class Commands(CommandsInterface):
                                     return "This course conflicts with the instructor's current schedule"
             this_course.instructor = account
             this_course.save()
-            return user + " has been added to as " + course + "'s instructor"
+            return user + " has been added as " + course + "'s instructor"
 
-    def assign_ta_to_course(self, user, course):
+    def assign_ta_to_course(self, user="", course=""):
         cur_user_role = self.get_current_user().role
         if cur_user_role != "Supervisor":
             return "You do not have permissions to assign TAs to courses"
+        if user == "" or course == "":
+            return "Please input valid arguments for both fields to create assign an instructor to a course"
         if not Account.objects.filter(user=user).exists():
             return "This user is not present in the data base"
         if not Course.objects.filter(name=course).exists():
@@ -200,8 +204,10 @@ class Commands(CommandsInterface):
         for course in course_list:
             if course.instructor is not None and course.tas is not None:
                 ta_list = list(course.tas.all())
-                output += "<p>Course: " + course.name + ", Section: " + \
-                          course.section + ", TA(s): [" + ta_list + "]</p><br />"
+                ta_str = ""
+                for ta in ta_list:
+                    ta_str += ta.user + " "
+                output += "<p>Course: " + course.name + ", Section: " + course.section + ", TA(s): " + ta_str + "</p><br />"
         return output
 
     def read_contact_info(self):
