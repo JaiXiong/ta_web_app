@@ -16,10 +16,12 @@ class Home(View):
 
 class Login(View):
     ui = Commands()
-    template_name = "login page"
+    template_name = "login.html"
     def get_login(self, request):
-        return render(request, "website/login.html")
+        print("inside getlogin")
+        return render(request, "login.html")
 
     def post_login(self, request):
-        out = "works in progress"
-        return render(request, "website/login.html", {"out": out})
+        print("inside postlogin")
+        out = self.ui.call_command(request.POST["loginpage"])
+        return render(request, "login.html", {"out": out})
