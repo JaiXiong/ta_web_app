@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+    <title>login page</title>
+  <h1>University Login</h1>
+    </head>
+    <body>
+  <form method="post_login" action="/">
+  {% csrf_token %}
+    <label id="usernamelabel" for="username"><b><i>user name:</i></b>
+    </label><input type="text" id="username" name="username" pattern="[A-Za-z]*"/><br/>
+    <label id="passwordlabel" for="password">password:
+    </label><input type="text" id="password" name="password" pattern="[A-Za-z]*"/><br/>
+      <a href="/">create account</a>
+
+<input type="submit" value="Submit">
+  </form>
+  <div id="out">{{out}}</div>
+    </body>
+{% endblock content %}
