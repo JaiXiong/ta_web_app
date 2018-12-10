@@ -6,6 +6,7 @@
   {% csrf_token %}
   command: <input type="text" name="command" style="width: 300px"/><input type="submit"/>
   </form>
-    <a href="/login/">loginpage</a>
+    <a href="/login/">loginpage</a><br>
+    <a href="/search/">searchpage</a><br>
   <div id="out">{{out|safe}}</div>
 {% endblock content %}

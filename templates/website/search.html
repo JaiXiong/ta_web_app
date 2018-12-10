@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{ % extends base.html % }
+<html lang="en">
+<title>searchpage</title>
+<h1>University Search</h1>
+<head>
+    <meta charset="UTF-8">
+    <title>search</title>
+</head>
+<body>
+        <form method="post" action="">
+        {% csrf_token %}
+        Search<input type="text" name="searchuser"/>
+        <input type="submit">
+        <!--<div id="out">{{out}}</div>-->
+        <div id="ctx">{{ ctx }}</div>
+        <div id="name">current: {{ name }}</div>
+            <a href="/">Go back</a>
+</form>
+</body>
+</html>

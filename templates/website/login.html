@@ -2,15 +2,18 @@
 {% block content %}
     <title>loginpage</title>
   <h1>University Login</h1>
-  <form method="post_login" action="">
+  <form method="post" action="">
   {% csrf_token %}
     <label id="usernamelabel" for="username">user name:
     </label><input type="text" id="username" name="username" pattern="[A-Za-z]*"/><br/>
     <label id="passwordlabel" for="password">password:
     </label><input type="text" id="password" name="password" pattern="[A-Za-z]*"/><br/>
-      <a href="/">create account</a>
+      <a href="/">create account</a><br>
 
-      <input type="submit" value="Submit">
+      <input type="submit" value="Submit"><br>
   <div id="out">{{out}}</div>
+  <!--<div id="ctx">{{ ctx }}</div>-->
+  <div id="name">current: {{ name }}</div>
+  <a href="/">Go back</a>
   </form>
 {% endblock content %}
