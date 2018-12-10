@@ -63,21 +63,13 @@ class Search(View):
             if db.filter(user=name).count() == 0:
                 return "Invalid search, try again"
             else:
-                print("current information:")
                 name = request.session["name"]
-                print("user info:" + name)
                 user = searchthis.user
-                print(user)
                 password = searchthis.password
-                print(password)
                 role = searchthis.role
-                print(role)
                 address = searchthis.street_address
-                print(address)
                 email = searchthis.email_address
-                print(email)
                 phone = searchthis.phone_number
-                print(phone)
         else:
             print("Invalid permissions to view information")
         ctx = {user, password, role, address, email, phone}
