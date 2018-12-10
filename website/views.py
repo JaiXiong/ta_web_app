@@ -19,7 +19,7 @@ class Login(View):
     ui = Commands()
 
     def get(self, request):
-        print("inside get login")
+
         if "name" in request.session:
             name = request.session["name"]
         else:
@@ -27,7 +27,7 @@ class Login(View):
         return render(request, "website/login.html", {"name": name})
 
     def post(self, request):
-        print("inside post login")
+
         name = request.POST["username"]
         password = request.POST["password"]
         request.session["name"] = name
@@ -38,8 +38,8 @@ class Login(View):
 
 class Search(View):
     ui = Commands()
+
     def get(self, request):
-        print("inside get search")
         if "name" in request.session:
             name = request.session["name"]
         else:
@@ -47,7 +47,6 @@ class Search(View):
         return render(request, "website/search.html", {"name": name})
 
     def post(self, request):
-        print("inside post search")
         user = ""
         password = ""
         role = ""
@@ -58,22 +57,9 @@ class Search(View):
         searchuser = request.POST["searchuser"]
         name = request.session["name"]
         request.session["name"] = name
-        print("current: "+ name)
-        #current = self.ui.get_current_user()
-        #print(current)
         current = self.ui.get_account(name)
-        print(current)
-        print(current.role)
-        if current.role == "Supervisor":
-            print("yay im supervisor")
-        if (current.role == "Administrator"):
-            print("yay im admin")
         if current.role == "Supervisor" or current.role == "Administrator":
-            #print("Invalid permissions to view user")
-            #else:
-            print("did it make it here????")
             searchthis = self.ui.get_account(searchuser)
-            print("trying to search: " + searchthis.user)
             if db.filter(user=name).count() == 0:
                 return "Invalid search, try again"
             else:

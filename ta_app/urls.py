@@ -22,9 +22,5 @@ from website.views import Home, Login
 urlpatterns = [
   url(r'^admin/', admin.site.urls),
   path('', views.Home.as_view()),
-  #url(r'', views.Login.as_view()),
-  #url(r'', views.Search.as_view())
-  #url(r'^login/$', views.Login.as_view()),
-  #path('', views.Home.as_view()),
   url(r'^', include('website.urls')),
 ]
