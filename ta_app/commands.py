@@ -1,6 +1,6 @@
 from ta_app.commands_interface import CommandsInterface
 import ta_app.wsgi
-from website.models import Account, Course
+from website.models import Account, Course, Lab
 
 
 class Commands(CommandsInterface):
@@ -113,51 +113,60 @@ class Commands(CommandsInterface):
                            section=section,
                            days_of_week=days,
                            start_time=times[0],
-                           end_time=times[1],
-                           lab_sections=labs)
+                           end_time=times[1])
                 o.save()
-            return "Course " + name + " has been added to the data base."
+                for lab in ls:
+                    Lab(course=o, section=lab).save()
+            return "Course " + name + " has been added to the data base with lab sections " + labs
+
+        # helper timing conflict
+
+    def overlap(self, start1, end1, start2, end2):
+        """Does the range (start1, end1) overlap with (start2, end2)?"""
+        return end1 >= start2 and end2 >= start1
+
+        # helper schedule conflict
+
+    def schedule_verification(self, this_schedule, user_schedule):
+        if user_schedule is not None:
+            these_days = this_schedule.days_of_week.split("/")
+            this_st = this_schedule.start_time.replace(":", "")
+            this_et = this_schedule.end_time.replace(":", "")
+            for c in user_schedule:
+                those_days = c.days_of_week.split("/")
+                for d in these_days:
+                    for cd in those_days:
+                        if cd == d:
+                            those_st = c.start_time.replace(":", "")
+                            those_et = c.end_time.replace(":", "")
+                            return self.overlap(this_st, this_et, those_st, those_et)
 
     def assign_instructor(self, user="", course=""):
+        if user == "" or course == "":
+            return "Please input valid arguments for both fields to create assign an instructor to a course"
         cur_user_role = self.get_current_user().role
         if cur_user_role != "Supervisor":
             return "You do not have permissions to assign instructors to courses"
-        if user == "" or course == "":
-            return "Please input valid arguments for both fields to create assign an instructor to a course"
-
         if not Account.objects.filter(user=user).exists():
             return "This user is not present in the data base"
-
         if not Course.objects.filter(name=course).exists():
             return "This course is not present in the data base"
         else:
             this_course = Course.objects.get(name=course)
             account = Account.objects.get(user=user)
             instructors_courses = Course.objects.filter(instructor=account)
-            if instructors_courses is not None:
-                these_days = this_course.days_of_week.split("/")
-                this_st = this_course.start_time.replace(":", "")
-                this_et = this_course.end_time.replace(":", "")
-                for c in instructors_courses:
-                    those_days = c.days_of_week.split("/")
-                    for d in these_days:
-                        for cd in those_days:
-                            if cd == d:
-                                those_st = c.start_time.replace(":", "")
-                                those_et = c.end_time.replace(":", "")
-
-                                if self.overlap(this_st, this_et, those_st, those_et):
-                                    return "This course conflicts with the instructor's current schedule"
+            if self.schedule_verification(this_course, instructors_courses):
+                return "This course conflicts with the instructor's current schedule"
             this_course.instructor = account
             this_course.save()
-            return user + " has been added as " + course + "'s instructor"
+            return user + " has been added to as " + course + "s instructor"
 
     def assign_ta_to_course(self, user="", course=""):
+        if user == "" or course == "":
+            return "Please input valid arguments for both fields to assign a ta to a course"
         cur_user_role = self.get_current_user().role
         if cur_user_role != "Supervisor":
             return "You do not have permissions to assign TAs to courses"
-        if user == "" or course == "":
-            return "Please input valid arguments for both fields to create assign an instructor to a course"
         if not Account.objects.filter(user=user).exists():
             return "This user is not present in the data base"
         if not Course.objects.filter(name=course).exists():
@@ -166,25 +175,39 @@ class Commands(CommandsInterface):
             this_course = Course.objects.get(name=course)
             account = Account.objects.get(user=user)
             tas_courses = Course.objects.filter(tas=account)
-            if tas_courses is not None:
-                these_days = this_course.days_of_week.split("/")
-                this_st = this_course.start_time.replace(":", "")
-                this_et = this_course.end_time.replace(":", "")
-                for c in tas_courses:
-                    those_days = c.days_of_week.split("/")
-                    for d in these_days:
-                        for cd in those_days:
-                            if cd == d:
-                                those_st = c.start_time.replace(":", "")
-                                those_et = c.end_time.replace(":", "")
-                                if self.overlap(this_st, this_et, those_st, those_et):
-                                    return "This course conflicts with the TA's current schedule"
+            if self.schedule_verification(this_course, tas_courses):
+                return "This course conflicts with the TA's current schedule"
             this_course.tas.add(account)
             this_course.save()
-            return user + " has been added as a TA to " + course
+            return user + " has been added to as a TA to " + course
 
-    def assign_ta_to_lab(self, user, course, lab):
-        return ''
+    def assign_ta_to_lab(self, user="", course="", lab=""):
+        if user == "" or course == "" or lab == "":
+            return "Please input valid arguments for all fields to assign a TA to a lab section"
+        cur_user_role = self.get_current_user().role
+        if cur_user_role != "Supervisor" and cur_user_role != "Instructor":
+            return "You do not have permissions to assign TAs to labs"
+        if not Account.objects.filter(user=user).exists():
+            return "This user is not present in the data base"
+        if not Course.objects.filter(name=course).exists():
+            return "This course is not present in the data base"
+        this_course = Course.objects.get(name=course)
+        if not Lab.objects.filter(course=this_course, section=lab).exists():
+            return "Course " + course + " does not have lab section " + lab + " present in the data base"
+        this_lab = Lab.objects.get(course=this_course, section=lab)
+        account = Account.objects.get(user=user)
+        if not this_course.tas.filter(user=account.user).exists():
+            return "This user is not assigned as a TA to this course"
+        if this_lab.days_of_week is None or this_lab.start_time is None or this_lab.end_time is None:
+            return "This lab section does not have a specified schedule yet"
+        else:
+            tas_courses = Course.objects.filter(tas=account)
+            tas_labs = Lab.objects.filter(ta=account)
+            if self.schedule_verification(this_lab, tas_courses) or self.schedule_verification(this_lab, tas_labs):
+                return "This lab conflicts with the TA's current schedule"
+            this_lab.ta = account
+            this_lab.save()
+            return user + " has been assigned as the TA to " + course + " " + lab
 
     def view_course_assignments(self):
         if self.current_user.user == "":
@@ -261,10 +284,6 @@ class Commands(CommandsInterface):
         if len(accounts) == 1:
             return accounts.__getitem__(0)
         return Account()
-
-    def overlap(self, start1, end1, start2, end2):
-        """Does the range (start1, end1) overlap with (start2, end2)?"""
-        return end1 >= start2 and end2 >= start1
 
     def set_command_list(self):
         if self.current_user.id is None:

@@ -12,3 +12,11 @@ class Home(View):
     def post(self, request):
         out = self.ui.call_command(request.POST["command"])
         return render(request, "website/index.html", {"out": out})
+
+
+class CreateCourse(View):
+    def get(self, request):
+        return render(request, "website/create_course.html")
+
+    def post(self, request):
+        pass

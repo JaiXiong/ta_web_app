@@ -1,14 +1,14 @@
 import abc
 
 
-class ICourse:
+class ILab:
 
     @abc.abstractmethod
-    def name(self) -> str:
+    def course(self) -> str:
         pass
 
     @abc.abstractmethod
-    def name(self, n: str):
+    def course(self, n: str):
         pass
 
     @abc.abstractmethod
@@ -44,34 +44,9 @@ class ICourse:
         pass
 
     @abc.abstractmethod
-    def instructor(self) -> str:
+    def ta(self) -> str:
         pass
 
     @abc.abstractmethod
-    def instructor(self, i: str):
+    def ta(self, ts: str):
         pass
-
-    @abc.abstractmethod
-    def tas(self) -> [str]:
-        pass
-
-    @abc.abstractmethod
-    def tas(self, ts: [str]):
-        pass
-
-    @abc.abstractmethod
-    def lab(self) -> str:
-        pass
-
-    @abc.abstractmethod
-    def lab(self, l: str):
-        pass
-
-    @abc.abstractmethod
-    def lab_sections(self) -> [str]:
-        pass
-
-    @abc.abstractmethod
-    def lab_sections(self, ls: [str]):
-        pass
-

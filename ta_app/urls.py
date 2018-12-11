@@ -17,9 +17,10 @@ from django.conf.urls import url
 from django.urls import include, path
 from django.contrib import admin
 from website import views
-from website.views import Home
+from website.views import Home, CreateCourse
 
 urlpatterns = [
   url(r'^admin/', admin.site.urls),
   path('', Home.as_view()),
+  path('createcourse/', CreateCourse.as_view())
 ]

@@ -10,8 +10,7 @@ class TestCommandsAssignTaToCourse(TestCase):
                                              section="004",
                                              days_of_week="M/W/F",
                                              start_time="11:00",
-                                             end_time="11:50",
-                                             lab_sections="001/002/003")
+                                             end_time="11:50")
         self.Course1.save()
         self.Course2 = Course.objects.create(name="CS-361",
                                              section="003",
@@ -61,6 +60,6 @@ class TestCommandsAssignTaToCourse(TestCase):
     # test that instructor is added to course wit proper conditions
     def test_CommandsAssignTaToCourse6(self):
         response = self.co.assign_ta_to_course('Joe', 'CS-361')
-        self.assertEqual(response, 'Joe has been added as a TA to CS-361')
+        self.assertEqual(response, 'Joe has been added to as a TA to CS-361')
         assigned = Course.objects.filter(name='CS-361', tas=self.Account2).exists()
         self.assertEqual(True, assigned)
