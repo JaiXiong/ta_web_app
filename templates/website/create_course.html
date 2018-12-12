@@ -1,39 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
-    # !!! this is not 100% complete but will give everyone an example of using bootstrap css !!!
+     !!! this is not 100% complete but will give everyone an example of using bootstrap css !!!
     <Body>
-        <h1>Create Course</h1>
-        <form method="post" action="/">
-        {% csrf_token %}
-        <form>
-  <div
-  <div class="form-group">
-    <label for="course_name">Course Name</label>
-    <input type="text" class="form-control" id="course_name"  placeholder="example: CS-361">
+    <h1>{{ header }}</h1>
+    <form method="post" action="">
+    {% csrf_token %}
 
-  </div>
-  <div class="form-group">
-    <label for="course_section">Course Section</label>
-    <input type="text" class="form-control" id="course_section" placeholder="example: 001">
-  </div>
-  <div class="form-group">
-    <label for="course_days">Days of the Week</label>
-    <input type="text" class="form-control" id="course_days" aria-describedby="days_help" placeholder="example: M/W/F">
-    <small id="days_help" class="form-text text-muted">Days of the week are represented as M/T/W/T/F/S/U and O for online.</small>
-  </div>
-  <div class="form-group">
-    <label for="course_time">Course Time</label>
-    <input type="text" class="form-control" id="course_time" aria-describedby="time_help" placeholder="example: 13:00-14:45">
-    <small id="time_help" class="form-text text-muted">Time is represented in military time.</small>
-  </div>
-   <div class="form-group">
-    <label for="lab_sections">Lab Sections</label>
-    <input type="text" class="form-control" id="course_time" aria-describedby="lab_help" placeholder="example: 002/003/004">
-    <small id="lab_help" class="form-text text-muted">Lab sections will need to be completed with dates and times before assign TAs.</small>
-  </div>
-  <button type="submit" class="btn btn-danger">Submit</button>
-        </form>
-        <div id="out">{{out|safe}}</div>
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+            <div class="form-group">
+                <label for="course_name">Course Name</label>
+                <input type="text" class="form-control" id="course_name"  placeholder="example: CS-361">
+            </div>
+            <br/>
+            <div class="form-group">
+                <label for="course_section">Course Section</label>
+                <input type="text" class="form-control" id="course_section" placeholder="example: 001">
+            </div>
+            <br/>
+            <div class="form-group">
+                <label for="course_days">Days of the Week</label>
+                <input type="text" class="form-control" id="course_days" aria-describedby="days_help" placeholder="example: M/W/F">
+                <small id="days_help" class="form-text text-muted">Days of the week are represented as M/T/W/T/F/S/U and O for online.</small>
+             </div>
+            <br/>
+            <div class="form-group">
+                <label for="course_time">Course Time</label>
+                <input type="text" class="form-control" id="course_time" aria-describedby="time_help" placeholder="example: 13:00-14:45">
+                <small id="time_help" class="form-text text-muted">Time is represented in military time.</small>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label for="lab_sections">Lab Sections</label>
+                <input type="text" class="form-control" id="lab_sections" aria-describedby="lab_help" placeholder="example: 402/403/404">
+                <small id="lab_help" class="form-text text-muted">Lab sections will need to be completed with dates and times before assign TAs.</small>
+            </div>
+            <br/>
+            <button type="submit" class="btn btn-danger">Submit</button>
+        </div>
+    </div>
+    </form>
+    <div id="out">{{out|safe}}</div>
     </Body>
 
 {% endblock content %}

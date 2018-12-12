@@ -4,7 +4,7 @@ import ta_app.wsgi
 from website.models import Account, Course
 
 
-class TestCommands(TestCase):
+class TestViewCourseAssignments(TestCase):
 
     def setUp(self):
         self.ui = Commands()
@@ -36,8 +36,7 @@ class TestCommands(TestCase):
                              start_time="12:00",
                              end_time="13:00",
                              instructor=self.tst_instructor,
-                             lab="333",
-                             lab_sections="444")
+                             lab="333")
         test_course.save()
         expected_output = "<p>Course: " + test_course.name + ", Instructor: " + self.tst_instructor.user + "</p><br />"
         actual_output = self.ui.view_course_assignments()
@@ -51,8 +50,7 @@ class TestCommands(TestCase):
                              start_time="12:00",
                              end_time="13:00",
                              instructor=self.tst_instructor,
-                             lab="333",
-                             lab_sections="444")
+                             lab="333")
         test_course.save()
         expected_output = "<p>Course: " + test_course.name + ", Instructor: " + self.tst_instructor.user + "</p><br />"
         actual_output = self.ui.view_course_assignments()
@@ -66,8 +64,7 @@ class TestCommands(TestCase):
                              start_time="12:00",
                              end_time="13:00",
                              instructor=self.tst_instructor,
-                             lab="333",
-                             lab_sections="444")
+                             lab="333")
         test_course.save()
         expected_output = "<p>Course: " + test_course.name + ", Instructor: " + self.tst_instructor.user + "</p><br />"
         actual_output = self.ui.view_course_assignments()
@@ -83,8 +80,7 @@ class TestCommands(TestCase):
                               start_time="12:00",
                               end_time="13:00",
                               instructor=self.tst_instructor,
-                              lab="333",
-                              lab_sections="444")
+                              lab="333")
         test_course1.save()
         test_course2 = Course(name="CS104",
                               section="223",
@@ -92,8 +88,7 @@ class TestCommands(TestCase):
                               start_time="14:00",
                               end_time="15:00",
                               instructor=test_instructor2,
-                              lab="363",
-                              lab_sections="474")
+                              lab="363")
         test_course2.save()
         expected_output = "<p>Course: " + test_course1.name + ", Instructor: " + self.tst_instructor.user + "</p><br />" + \
                           "<p>Course: " + test_course2.name + ", Instructor: " + test_instructor2.user + "</p><br />"
@@ -107,8 +102,7 @@ class TestCommands(TestCase):
                              days_of_week="M/W/F",
                              start_time="12:00",
                              end_time="13:00",
-                             lab="333",
-                             lab_sections="444")
+                             lab="333")
         test_course.save()
         test_course2 = Course(name="CS104",
                               section="223",
@@ -116,8 +110,7 @@ class TestCommands(TestCase):
                               start_time="14:00",
                               end_time="15:00",
                               instructor=self.tst_instructor,
-                              lab="363",
-                              lab_sections="474")
+                              lab="363")
         test_course2.save()
         expected_output = "<p>Course: " + test_course2.name + ", Instructor: " + self.tst_instructor.user + "</p><br />"
         actual_output = self.ui.view_course_assignments()
@@ -137,8 +130,7 @@ class TestCommands(TestCase):
                              start_time="12:00",
                              end_time="13:00",
                              instructor=self.tst_instructor,
-                             lab="333",
-                             lab_sections="444")
+                             lab="333")
         test_course.save()
         test_course.tas.add(self.tst_ta)
         expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + " </p><br />"
@@ -153,8 +145,7 @@ class TestCommands(TestCase):
                              start_time="12:00",
                              end_time="13:00",
                              instructor=self.tst_instructor,
-                             lab="333",
-                             lab_sections="444")
+                             lab="333")
         test_course.save()
         test_course.tas.add(self.tst_ta)
         expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + " </p><br />"
@@ -169,8 +160,7 @@ class TestCommands(TestCase):
                              start_time="12:00",
                              end_time="13:00",
                              instructor=self.tst_instructor,
-                             lab="333",
-                             lab_sections="444")
+                             lab="333")
         test_course.save()
         test_course.tas.add(self.tst_ta)
         expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + " </p><br />"
@@ -185,8 +175,7 @@ class TestCommands(TestCase):
                              start_time="12:00",
                              end_time="13:00",
                              instructor=self.tst_instructor,
-                             lab="333",
-                             lab_sections="444")
+                             lab="333")
         test_course.save()
         test_course.tas.add(self.tst_ta)
         expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + " </p><br />"
@@ -203,8 +192,7 @@ class TestCommands(TestCase):
                              start_time="12:00",
                              end_time="13:00",
                              instructor=self.tst_instructor,
-                             lab="333",
-                             lab_sections="444")
+                             lab="333")
         test_course.save()
         test_course.tas.add(self.tst_ta)
         test_course.tas.add(test_ta2)
@@ -222,8 +210,7 @@ class TestCommands(TestCase):
                              start_time="12:00",
                              end_time="13:00",
                              instructor=self.tst_instructor,
-                             lab="333",
-                             lab_sections="444")
+                             lab="333")
         test_course.save()
         test_course.tas.add(self.tst_ta)
         test_course2 = Course(name="CS104",
@@ -232,8 +219,7 @@ class TestCommands(TestCase):
                               start_time="14:00",
                               end_time="15:00",
                               instructor=self.tst_instructor,
-                              lab="363",
-                              lab_sections="474")
+                              lab="363")
         test_course2.save()
         test_course2.tas.add(test_ta2)
         expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + \

@@ -20,3 +20,12 @@ class CreateCourse(View):
 
     def post(self, request):
         pass
+
+
+class CreateAccount(View):
+    def get(self, request):
+        return render(request, "website/create_account.html")
+
+    def post(self, request):
+        pass
+

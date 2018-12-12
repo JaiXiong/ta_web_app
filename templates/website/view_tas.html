@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>View TAs</title>
+    </head>
+    <body>
+        <form method="post" action="/">
+            {% csrf_token %}
+            <label for="ta_name">TA Name</label>
+            <input type="text" id="ta_name">
+            <input type="submit" value="Search">
+        </form>
+        <table>
+            {% for course in ta_assignment_list %}
+                <tr>
+                    <td>
+                        Course: {{ course.name }}
+                    </td>
+                    <td>
+                        Section: {{ couse.section }}
+                    </td>
+                    <td>
+                        TA(s): {{ course.tas }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>

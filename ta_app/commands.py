@@ -71,10 +71,13 @@ class Commands(CommandsInterface):
         account_to_delete.delete()
         return 'Successfully deleted account'
 
-    def edit_account(self, username, password, role, street_address, email_address, phone_number):
+    def edit_account(self, username='', password='', role='', street_address='', email_address='', phone_number=''):
         return ''
 
     def create_course(self, name="", section="", days="", time="", labs=""):
+        cur_user_role = self.get_current_user().role
+        if cur_user_role != "Supervisor" and cur_user_role != "Administrator":
+            return "You do not have permissions to create courses"
         if name == "" or section == "" or days == "" or time == "" or labs == "":
             return "Please input valid arguments for all fields to create a course"
         else:
@@ -232,7 +235,7 @@ class Commands(CommandsInterface):
                 ta_str = ""
                 for ta in ta_list:
                     ta_str += ta.user + " "
-                output += "<p>Course: " + course.name + ", Section: " + course.section + ", TA(s): " + ta_str + "</p><br />"
+                output += "<p>Course: " + course.name + ", Section: " + course.section + ", TA(s): " + ta_str + " </p><br />"
         return output
 
     def read_contact_info(self):
