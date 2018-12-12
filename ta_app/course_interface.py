@@ -1,7 +1,7 @@
 import abc
 
 
-class ICourse(abc.ABC):
+class ICourse:
 
     @abc.abstractmethod
     def name(self) -> str:

@@ -1,9 +1,10 @@
 from django.db import models
+from ta_app.account_object_interface import IAccount
 from ta_app.course_interface import ICourse
 from ta_app.lab_interface import ILab
 
 
-class Account(models.Model):
+class Account(models.Model, IAccount):
     user = models.CharField(max_length=20)
     password = models.CharField(max_length=20)
     role = models.CharField(max_length=17)

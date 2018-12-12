@@ -1,16 +1,12 @@
-import unittest as ut
+from django.test import TestCase
 from ta_app.commands import Commands
 import ta_app.wsgi
 from website.models import Account, Course
 
 
-class TestCommands(ut.TestCase):
+class TestCommands(TestCase):
 
     def setUp(self):
-        for i in Account.objects.all():
-            i.delete()
-        for i in Course.objects.all():
-            i.delete()
         self.ui = Commands()
         self.tst_supervisor = Account(user='usrSupervisor', password='password', role='Supervisor')
         self.tst_administrator = Account(user='usrAdministrator', password='password', role='Administrator')
@@ -21,33 +17,97 @@ class TestCommands(ut.TestCase):
         self.tst_instructor.save()
         self.tst_ta.save()
 
-        self.test_accounts = []
-        self.test_accounts.append(self.tst_supervisor)
-        self.test_accounts.append(self.tst_administrator)
-        self.test_accounts.append(self.tst_instructor)
-        self.test_accounts.append(self.tst_ta)
+        self.tst_course = Course(name="EE-554", section="004", days_of_week="M/W/F",
+                                 start_time="11:00", end_time="11:50")
+        self.tst_course.save()
 
-    def tearDown(self):
-        for i in self.test_accounts:
-            i.delete()
-        for i in Course.objects.all():
-            i.delete()
-
-    def testCallCommandValid(self):
-        expected_output = 'login\nhelp\n'
-        actual_output = self.ui.call_command('help')
-        self.assertEqual(expected_output, actual_output)
+    def test_call_command_valid(self):
+        self.ui.current_user = Account()
+        self.ui.set_command_list()
+        output1 = self.ui.call_command('help')
+        output2 = self.ui.call_command('login usrSupervisor password')
+        output3 = self.ui.call_command('logout')
+        self.assertNotEqual(output1, 'You should type something...')
+        self.assertNotEqual(output2, 'You should type something...')
+        self.assertNotEqual(output3, 'You should type something...')
+        self.assertNotEqual(output1, 'Too many arguments entered. Try again!')
+        self.assertNotEqual(output2, 'Too many arguments entered. Try again!')
+        self.assertNotEqual(output3, 'Too many arguments entered. Try again!')
+        self.assertNotEqual(output1, 'ERROR: this is not an available command')
+        self.assertNotEqual(output2, 'ERROR: this is not an available command')
+        self.assertNotEqual(output3, 'ERROR: this is not an available command')
 
     def testCallCommandInvalid(self):
         expected_output = 'ERROR: this is not an available command'
         actual_output = self.ui.call_command('invalidCommand')
         self.assertEqual(expected_output, actual_output)
 
+    def test_call_command_too_many_args(self):
+        expected_output = 'Too many arguments entered. Try again!'
+        actual_output = self.ui.call_command('login user password oops')
+        self.assertEqual(expected_output, actual_output)
+
+    def test_call_command_no_args(self):
+        expected_output = ''
+        actual_output = self.ui.call_command()
+        self.assertEqual(expected_output, actual_output)
+
     def test_help_with_no_current_user(self):
         self.ui.current_user = Account()
-        expected_output = 'login\nhelp\n'
-        actual_output = self.ui.call_command('help')
-        self.assertEqual(expected_output, actual_output)
+        output = self.ui.help()
+        self.assertTrue(output.find('login'))
+        self.assertTrue(output.find('help'))
+
+    def test_help_as_supervisor(self):
+        self.ui.current_user = self.tst_supervisor
+        output = self.ui.help()
+        self.assertTrue(output.find('logout'))
+        self.assertTrue(output.find('create_account'))
+        self.assertTrue(output.find('delete_account'))
+        self.assertTrue(output.find('edit_account'))
+        self.assertTrue(output.find('create_account'))
+        self.assertTrue(output.find('assign_instructor'))
+        self.assertTrue(output.find('assign_ta_to_course'))
+        self.assertTrue(output.find('assign_ta_to_lab'))
+        self.assertTrue(output.find('view_course_assignments'))
+        self.assertTrue(output.find('view_ta_assignments'))
+        self.assertTrue(output.find('edit_contact_info'))
+        self.assertTrue(output.find('read_contact_info'))
+        self.assertTrue(output.find('help'))
+
+    def test_help_as_administrator(self):
+        self.ui.current_user = self.tst_administrator
+        output = self.ui.help()
+        self.assertTrue(output.find('logout'))
+        self.assertTrue(output.find('create_account'))
+        self.assertTrue(output.find('delete_account'))
+        self.assertTrue(output.find('edit_account'))
+        self.assertTrue(output.find('create_account'))
+        self.assertTrue(output.find('view_course_assignments'))
+        self.assertTrue(output.find('view_ta_assignments'))
+        self.assertTrue(output.find('edit_contact_info'))
+        self.assertTrue(output.find('read_contact_info'))
+        self.assertTrue(output.find('help'))
+
+    def test_help_as_instructor(self):
+        self.ui.current_user = self.tst_instructor
+        output = self.ui.help()
+        self.assertTrue(output.find('logout'))
+        self.assertTrue(output.find('assign_ta_to_lab'))
+        self.assertTrue(output.find('view_course_assignments'))
+        self.assertTrue(output.find('view_ta_assignments'))
+        self.assertTrue(output.find('edit_contact_info'))
+        self.assertTrue(output.find('read_contact_info'))
+        self.assertTrue(output.find('help'))
+
+    def test_help_as_ta(self):
+        self.ui.current_user = self.tst_ta
+        output = self.ui.help()
+        self.assertTrue(output.find('logout'))
+        self.assertTrue(output.find('view_ta_assignments'))
+        self.assertTrue(output.find('edit_contact_info'))
+        self.assertTrue(output.find('read_contact_info'))
+        self.assertTrue(output.find('help'))
 
     def test_login_bad_username(self):
         self.ui.current_user = Account()
@@ -172,13 +232,12 @@ class TestCommands(ut.TestCase):
         actual_output = self.ui.create_account(username, password, role)
         self.assertEqual(expected_output, actual_output)
         created_account = self.ui.get_account(username)
-        self.test_accounts.append(created_account)
         self.assertIsNotNone(created_account.id)
         self.assertEqual(created_account.user, username)
         self.assertEqual(created_account.password, password)
         self.assertEqual(created_account.role, role)
 
-    def test_create_account_as_administrator_(self):
+    def test_create_account_as_administrator(self):
         self.ui.login('usrAdministrator', 'password')
         username = 'tstCreatSupervisor'
         password = 'password'
@@ -187,7 +246,6 @@ class TestCommands(ut.TestCase):
         actual_output = self.ui.create_account(username, password, role)
         self.assertEqual(expected_output, actual_output)
         created_account = self.ui.get_account(username)
-        self.test_accounts.append(created_account)
         self.assertIsNotNone(created_account.id)
         self.assertEqual(created_account.user, username)
         self.assertEqual(created_account.password, password)
@@ -242,5 +300,75 @@ class TestCommands(ut.TestCase):
         self.assertEqual(initial_count, final_count)
 
     def test_delete_account_as_supervisor(self):
-        pass
+        self.ui.login('usrSupervisor', 'password')
+        self.ui.create_account('tstDeleteAcc', 'password', 'TA')
+        expected_output = 'Successfully deleted account'
+        initial_count = Account.objects.count()
+        expected_count = initial_count - 1
+        actual_output = self.ui.delete_account('tstDeleteAcc')
+        final_count = Account.objects.count()
+        self.assertEqual(expected_output, actual_output)
+        self.assertEqual(expected_count, final_count)
 
+    def test_delete_account_as_administrator(self):
+        self.ui.login('usrAdministrator', 'password')
+        self.ui.create_account('tstDeleteAcc', 'password', 'TA')
+        initial_count = Account.objects.count()
+        expected_count = initial_count - 1
+        expected_output = 'Successfully deleted account'
+        actual_output = self.ui.delete_account('tstDeleteAcc')
+        final_count = Account.objects.count()
+        self.assertEqual(expected_output, actual_output)
+        self.assertEqual(expected_count, final_count)
+
+    def test_delete_account_not_exist(self):
+        self.ui.login('usrSupervisor', 'password')
+        expected_output = 'Failed to delete account. User not found'
+        initial_count = Account.objects.count()
+        actual_output = self.ui.delete_account('notExist')
+        final_count = Account.objects.count()
+        self.assertEqual(expected_output, actual_output)
+        self.assertEqual(initial_count, final_count)
+
+    def test_delete_supervisor_as_administrator(self):
+        self.ui.login('usrAdministrator', 'password')
+        expected_output = 'Failed to delete account. Insufficient permissions'
+        initial_count = Account.objects.count()
+        actual_output = self.ui.delete_account('usrSupervisor')
+        final_count = Account.objects.count()
+        self.assertEqual(expected_output, actual_output)
+        self.assertEqual(initial_count, final_count)
+
+    def test_delete_account_as_Instructor(self):
+        self.ui.login('usrInstructor', 'password')
+        expected_output = 'Failed to delete account. Insufficient permissions'
+        initial_count = Account.objects.count()
+        actual_output = self.ui.delete_account('usrTA')
+        final_count = Account.objects.count()
+        self.assertEqual(expected_output, actual_output)
+        self.assertEqual(initial_count, final_count)
+
+    def test_delete_account_as_TA(self):
+        self.ui.login('usrTA', 'password')
+        expected_output = 'Failed to delete account. Insufficient permissions'
+        initial_count = Account.objects.count()
+        actual_output = self.ui.delete_account('usrTA')
+        final_count = Account.objects.count()
+        self.assertEqual(expected_output, actual_output)
+        self.assertEqual(initial_count, final_count)
+
+    def test_delete_account_assigned_to_course(self):
+        self.ui.login('usrSupervisor', 'password')
+        self.tst_course.instructor = self.tst_instructor
+        self.tst_course.save()
+        self.assertEqual(self.tst_course.instructor, self.tst_instructor)
+        num_courses_initial = Course.objects.count()
+        num_accounts_initial = Account.objects.count()
+        expected_output = 'Failed to delete account. User is assigned to a course'
+        actual_output = self.ui.delete_account(self.tst_instructor.user)
+        self.assertEqual(self.tst_course.instructor, self.tst_instructor)
+        num_courses_final = Course.objects.count()
+        num_accounts_final = Account.objects.count()
+        self.assertEqual(expected_output, actual_output)
+        self.assertEqual(num_accounts_initial, num_accounts_final)
+        self.assertEqual(num_courses_initial, num_courses_final)
