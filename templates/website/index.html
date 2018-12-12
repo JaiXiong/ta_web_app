@@ -1,23 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
   <h1>TA Scheduling Application</h1>
-    <h3>List of application commands and required arguments</h3>
-    <ol>
-    <li>login 'username' 'password'</li>
-    <li>logout</li>
-	<li>create_course 'name' 'section' 'days_of_week' 'times' 'lab_sections'</li>
-    <li>create_account 'user_name' 'password' 'role'</li>
-    <li>delete_account 'user_name'</li>
-    <li>edit_account 'user_name'</li>
-    <li>assign_instructor 'user_name' 'course'</li>
-    <li>assign_ta_to_course 'user_name' 'course'</li>
-    <li>assign_ta_to_lab 'user_name' 'course' 'lab_section'</li>
-    <li>access_system_data</li>
-    <li>edit_contact_info</li>
-    <li>view_ta_assignments</li>
-    <li>read_contact_info</li>
-    </ol>
-
+    <h4>Enter help for a list of available commands</h4>
   <form method="post" action="/">
   {% csrf_token %}
   command: <input type="text" name="command" style="width: 300px"/><input type="submit"/>
