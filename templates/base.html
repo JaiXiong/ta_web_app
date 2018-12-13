@@ -20,41 +20,43 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">TA Scheduling</a>
+      <a class="navbar-brand" href="{% url 'home' %}">TA Scheduling</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
             <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Accounts<span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href="#">Create Account</a></li>
                     <li><a href="#">Edit Account</a></li>
                     <li><a href="#">Delete Account</a></li>
+                    <li><a href="#">Edit Contact Info</a></li>
                 </ul>
             <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Courses<span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">Create Course</a></li>
-                    <li><a href="#">Assign Instructors</a></li>
-                    <li><a href="#">Assign TA to Course</a></li>
-                    <li><a href="#">Assign TA to Lab</a></li>
+                    <li><a href={% url 'createcourse' %}>Create Course</a></li>
+                    <li><a href={% url 'assigninstructor' %}>Assign Instructors</a></li>
+                    <li><a href={% url 'assigntatocourse' %}>Assign TA to Course</a></li>
+                    <li><a href={% url 'assigntatolab' %}>Assign TA to Lab</a></li>
                 </ul>
-            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">System Data<span class="caret"></span></a>
+            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">View<span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">Page 3-1</a></li>
-                    <li><a href="#">Page 3-2</a></li>
-                    <li><a href="#">Page 3-3</a></li>
+                    <li><a href={% url 'viewcontact' %}>Contact Info</a></li>
+                    <li><a href="#">Course Assignments</a></li>
+                    <li><a href="#">Lab Assignments</a></li>
                 </ul>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            <li><a href=/login/?next={{  request.get_full_path|urlencode}}><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
         </ul>
     </div>
   </div>
 </nav>
     <br/>
     <br/>
+    <br/>
 <body>
 <center>
+
     {% block content %}{% endblock content %}
 </center>
 </body>
