@@ -46,7 +46,7 @@ class CreateCourse(View):
         return render(request, "website/create_course.html", {"header": self.create_course_header})
 
     def post(self, request):
-        if request.session["user"] is not None:
+        if "user" in request.session and request.session["user"] is not None:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
             name = request.POST['course_name']
@@ -76,7 +76,7 @@ class AssignInstructor(View):
                                                        "is_ta_to_lab": self.ta_to_lab})
 
     def post(self, request):
-        if request.session["user"] is not None:
+        if "user" in request.session and request.session["user"] is not None:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
             user = request.POST["user_name"]
@@ -88,6 +88,7 @@ class AssignInstructor(View):
         else:
             out = "Please log in to assign an instructor to a course"
             return render(request, "website/assign.html", {"header": self.instructor_header,
+                                                           "is_ta_to_lab": self.ta_to_lab,
                                                            "return_statement": out})
 
 
@@ -104,7 +105,7 @@ class AssignTaToCourse(View):
                                                        "is_ta_to_lab": self.ta_to_lab})
 
     def post(self, request):
-        if request.session["user"] is not None:
+        if "user" in request.session and request.session["user"] is not None:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
             user = request.POST["user_name"]
@@ -116,6 +117,7 @@ class AssignTaToCourse(View):
         else:
             out = "Please log in to assign an instructor to a course"
             return render(request, "website/assign.html", {"header": self.ta_to_course_header,
+                                                           "is_ta_to_lab": self.ta_to_lab,
                                                            "return_statement": out})
 
 
@@ -132,7 +134,7 @@ class AssignTaToLab(View):
                                                        "is_ta_to_lab": self.ta_to_lab})
 
     def post(self, request):
-        if request.session["user"] is not None:
+        if "user" in request.session and request.session["user"] is not None:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
             user = request.POST["user_name"]
@@ -144,6 +146,7 @@ class AssignTaToLab(View):
         else:
             out = "Please log in to assign an instructor to a course"
             return render(request, "website/assign.html", {"header": self.ta_to_lab_header,
+                                                           "is_ta_to_lab": self.ta_to_lab,
                                                            "return_statement": out})
 
 
@@ -152,12 +155,6 @@ class ViewCourses(View):
     view_courses_header = "View Courses"
 
     def get(self, request):
-        if "user" in request.session:
-            ao = Account.objects.get(user=request.session["user"])
-            self.co.current_user = ao
-        return render(request, "website/view_courses.html", {"header": self.view_courses_header})
-
-    def post(self, request):
         if request.session["user"] is not None:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
@@ -167,18 +164,15 @@ class ViewCourses(View):
             out = "Please log in to view Course assignments"
             return render(request, "website/view_courses.html", {"header": self.view_courses_header, "course_list": out})
 
+    def post(self, request):
+        pass
+
 
 class ViewTAs(View):
     co = Commands()
     view_tas_header = "View TAs"
 
     def get(self, request):
-        if "user" in request.session:
-            ao = Account.objects.get(user=request.session["user"])
-            self.co.current_user = ao
-        return render(request, "website/view_tas.html", {"header": self.view_tas_header})
-
-    def post(self, request):
         if request.session["user"] is not None:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
@@ -188,8 +182,29 @@ class ViewTAs(View):
             out = "Please log in to view TA assignments"
             return render(request, "website/view_tas.html", {"header": self.view_tas_header, "course_list": out})
 
-class ViewContactInfo(View):
-    def get(self, request):
-        pass
     def post(self, request):
         pass
+
+
+class ViewContactInfo(View):
+    co = Commands()
+    view_contact_header = "Contact Information"
+
+    def get(self, request):
+        if "user" in request.session:
+            ao = Account.objects.get(user=request.session["user"])
+            self.co.current_user = ao
+        return render(request, "website/view_contact_info.html", {"header": self.view_contact_header})
+
+    def post(self, request):
+        if "user" in request.session and request.session["user"] is not None:
+            ao = Account.objects.get(user=request.session["user"])
+            self.co.current_user = ao
+            out = self.co.read_contact_info()
+            return render(request, "website/view_contact_info.html", {"header": self.view_contact_header,
+                                                                      "return_statement": out})
+        else:
+            out = "Please log in to assign an instructor to a course"
+            return render(request, "website/view_contact_info.html", {"header": self.view_contact_header,
+                                                                      "return_statement": out})
+
