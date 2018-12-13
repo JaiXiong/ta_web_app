@@ -78,3 +78,5 @@ Known Bugs:
   1.) view ta assignments throw exceptions
   2.) account roles are not validated before being assigned to course or lab
   3.) duplicate courses can be created - exception thrown when trying to assign instructor
+
+ 
