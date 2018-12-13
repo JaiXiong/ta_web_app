@@ -1,0 +1,63 @@
+{% load staticfiles %}
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TA Scheduling</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+</head>
+<!–– Supervisor navbar ––>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{% url 'home' %}">TA Scheduling</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Accounts<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Create Account</a></li>
+                    <li><a href="#">Edit Account</a></li>
+                    <li><a href="#">Delete Account</a></li>
+                    <li><a href="#">Edit Contact Info</a></li>
+                </ul>
+            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Courses<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href={% url 'createcourse' %}>Create Course</a></li>
+                    <li><a href={% url 'assigninstructor' %}>Assign Instructors</a></li>
+                    <li><a href={% url 'assigntatocourse' %}>Assign TA to Course</a></li>
+                    <li><a href={% url 'assigntatolab' %}>Assign TA to Lab</a></li>
+                </ul>
+            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">View<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href={% url 'viewcontact' %}>Contact Info</a></li>
+                    <li><a href="#">Course Assignments</a></li>
+                    <li><a href="#">Lab Assignments</a></li>
+                </ul>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href=/login/?next={{  request.get_full_path|urlencode}}><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        </ul>
+    </div>
+  </div>
+</nav>
+    <br/>
+    <br/>
+    <br/>
+<body>
+<center>
+
+    {% block content %}{% endblock content %}
+</center>
+</body>
+</html>

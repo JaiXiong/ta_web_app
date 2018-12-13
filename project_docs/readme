@@ -1,0 +1,28 @@
+
+Operations:
+  1.) Run driver.py
+  2.) To login with the default super user
+    a.) Enter "login default_superuser default_password"
+    b.) A successful login will output:
+          login as default_superuser
+          login successful...
+  3.) To create an account as the default super user
+    a.) Enter "create_account <username> <password> <role>"
+    b) <role> uses the following formats: "Supervisor", "Administrator", "Instructor", "TA"
+  4.) To remove an account as the default super user
+    a.) Enter "remove_account <user> <password> <role>"
+    b.) <role> uses the following formats: "Supervisor", "Administrator", "Instructor", "TA"
+  5.) To add a course as the default super user
+    a.) Enter "create_course <name>, <section>, [<days>], <times> <instructor>, [<tas>], <lab>, [<labsections>]"
+    b.) [<days>] uses the following day formats: M, T, W, R, F and are seperated by a forward slash ('/')
+    
+Known Bugs:
+  1.) Only works on a Windows installation of PyCharm due to the absolute paths of the Database files within the project
+    a.) Project must be brought into your workspace
+  2.) Entering a blank line will crash the program due to incorrect error handling
+  3.) Entering a command with incorrect parameters will crash the program
+  4.) Succussful login will print duplicate messages to the user
+  5.) Log in attempt with an incorrect username/ password print duplicate warnings to user
+  
+  
+  

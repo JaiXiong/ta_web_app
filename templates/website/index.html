@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+    <Body>
+        <h1>TA Scheduling Application</h1>
+        <h4>Enter help for a list of available commands</h4>
+        <form method="post" action="/">
+        {% csrf_token %}
+        command: <input type="text" name="command" style="width: 300px;"/><input type="submit"/>
+        </form>
+        <div id="out">{{out|safe}}</div>
+    </Body>
+
+{% endblock content %}

@@ -1,0 +1,10 @@
+
+Format: (users)
+<username>, <password> <??role??> <tab>
+Example:
+User0, thisisthepassword
+User1, password1
+User2, password2
+
+Example with role:
+User3, password3, TA
