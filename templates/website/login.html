@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+    <title>login</title>
+  <h1>University Login</h1>
+  <br/>
+  <form method="post" action="./?next={{ redirect_to }}">
+  {% csrf_token %}
+      <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+            <div class="form-group">
+                <label for="user_name">User Name</label>
+                <input type="text" class="form-control" name="user_name"  aria-describedby="login_help"
+                       placeholder="Example: JXiong4" pattern="[A-Za-z0-9]*">
+                <small id="login_help" class="form-text text-muted">Contact your school's Administrator or Supervisor if you do not have an account</small>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" aria-describedby="password_help"
+                       placeholder="" pattern="[A-Za-z0-9]*">
+                <small id="password_help" class="form-text text-muted">Please keep your password confidential and secure</small>
+            </div>
+            <br/>
+            {% if return_statement != None %}
+            <div class="alert alert-warning fade in">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong>Attention: </strong> {{ return_statement }}
+            </div>
+            <br/>
+            {% endif %}
+            <button type="submit" class="btn btn-danger">Submit</button>
+        </div>
+    </div>
+  </form>
+  <div id="out">{{out|safe}}</div>
+  </Body>
+{% endblock content %}

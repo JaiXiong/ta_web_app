@@ -17,16 +17,19 @@ from django.conf.urls import url
 from django.urls import include, path
 from django.contrib import admin
 from website import views
-from website.views import Home, CreateCourse, CreateAccount
+from website.views import Home, CreateCourse, CreateAccount, AssignInstructor, AssignTaToCourse,\
+                          AssignTaToLab, Login
 
 urlpatterns = [
   url(r'^admin/', admin.site.urls),
   path('', Home.as_view()),
   path('createcourse/', CreateCourse.as_view()),
   path('createaccount/', CreateAccount.as_view()),
+  path('assign_instructor/', AssignInstructor.as_view(), name='assigninstructor'),
+  path('assign_ta_to_course/', AssignTaToCourse.as_view(), name='assigntatocourse'),
+  path('assign_ta_to_lab/', AssignTaToLab.as_view(), name='assigntatolab'),
+  path('login/', Login.as_view(), name="login"),
 
-  # No views currently for the following:
-  # path('assign_instructor/', AssignInstructor.as_view(), name='assigninstructor'),
-  # path('assign_ta_to_course/', AssignTaToCourse.as_view(), name='assigntatocourse'),
-  # path('assign_ta_to_lab/', AssignTaToLab.as_view(), name='assigntatolab')
+  # Need view for following:
+  # path('view_contact_info/', ViewContactInfo.as_view(), name='viewcontact')
 ]

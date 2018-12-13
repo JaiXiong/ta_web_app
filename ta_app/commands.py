@@ -71,7 +71,8 @@ class Commands(CommandsInterface):
         account_to_delete.delete()
         return 'Successfully deleted account'
 
-    def edit_account(self, username='', password='', role='', street_address='', email_address='', phone_number=''):
+    def edit_account(self, username='', password='', role='',
+                     first_name='', last_name='', street_address='', email_address='', phone_number=''):
         return ''
 
     def create_course(self, name="", section="", days="", time="", labs=""):
