@@ -1,7 +1,7 @@
 import abc
 
 
-class Account(abc.ABC):
+class IAccount:
 
     @abc.abstractmethod
     def user(self, u):

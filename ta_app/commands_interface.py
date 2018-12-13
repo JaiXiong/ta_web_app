@@ -12,15 +12,16 @@ class CommandsInterface(abc.ABC):
         return ''
 
     @abc.abstractmethod
-    def create_account(self, user, password, role):
+    def create_account(self, username, password, role):
         return ''
 
     @abc.abstractmethod
-    def delete_account(self, user):
+    def delete_account(self, username):
         return ''
 
     @abc.abstractmethod
-    def edit_account(self, user):
+    def edit_account(self, username, password, role,
+                     first_name, last_name, street_address, email_address, phone_number):
         return ''
 
     @abc.abstractmethod
@@ -28,15 +29,15 @@ class CommandsInterface(abc.ABC):
         return ''
 
     @abc.abstractmethod
-    def assign_instructor(self, user, course):
+    def assign_instructor(self, username, course):
         return ''
 
     @abc.abstractmethod
-    def assign_ta_to_course(self, user, course):
+    def assign_ta_to_course(self, username, course):
         return ''
 
     @abc.abstractmethod
-    def assign_ta_to_lab(self, user, course, lab):
+    def assign_ta_to_lab(self, username, course, lab):
         return ''
 
     @abc.abstractmethod

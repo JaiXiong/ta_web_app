@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<Body xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+    <h1>Create Account</h1>
+    <br method="post" action="/">
+    {% csrf_token %}
+    <br>
+
+
+  <div class="form-group">
+    <label for="user_name">Course Name</label>
+    <input type="text" class="form-control" id="user_name"  placeholder="example: Bob Smith">
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="text" class="form-control" id="password" placeholder="example: abc123">
+  </div>
+
+
+   <select class="custom-select">
+  <option selected>Select a role</option>
+  <option value="Administrator">Administrator</option>
+  <option value="Supervisor">Supervisor</option>
+  <option value="Instructor">Instructor</option>
+  <option value="TA">TA</option>
+   </select>
+
+
+    </br>
+    </br>
+
+  <button type="submit" class="btn btn-danger">Submit</button>
+        </form>
+        <div id="out">{{out|safe}}</div>
+</Body>
+
+{% endblock content %}
