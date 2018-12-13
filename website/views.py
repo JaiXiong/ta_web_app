@@ -153,3 +153,26 @@ class AssignTaToLab(View):
             out = "Please log in to assign an instructor to a course"
             return render(request, "website/assign.html", {"header": self.ta_to_lab_header,
                                                            "return_statement": out})
+
+
+class ViewContactInfo(View):
+    co = Commands()
+    view_contact_header = "Contact Information"
+
+    def get(self, request):
+        if "user" in request.session:
+            ao = Account.objects.get(user=request.session["user"])
+            self.co.current_user = ao
+        return render(request, "website/view_contact_info.html", {"header": self.view_contact_header})
+
+    def post(self, request):
+        if request.session["user"] is not None:
+            ao = Account.objects.get(user=request.session["user"])
+            self.co.current_user = ao
+            out = self.co.read_contact_info()
+            return render(request, "website/view_contact_info.html", {"header": self.view_contact_header,
+                                                                      "return_statement": out})
+        else:
+            out = "Please log in to assign an instructor to a course"
+            return render(request, "website/view_contact_info.html", {"header": self.view_contact_header,
+                                                                      "return_statement": out})
