@@ -4,6 +4,7 @@ from ta_app.commands import Commands
 from website.models import Account
 from django.http import HttpResponseRedirect
 
+
 class Home(View):
     ui = Commands()
 
@@ -175,15 +176,20 @@ class ViewTAs(View):
         if "user" in request.session:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
-        return render(request, "website/view_tas.html", {"header": self.view_courses_header})
+        return render(request, "website/view_tas.html", {"header": self.view_tas_header})
 
     def post(self, request):
         if request.session["user"] is not None:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
             out = self.co.view_ta_assignments()
-            return render(request, "website/view_tas.html", {"header": self.view_courses_header, "course_list": out})
+            return render(request, "website/view_tas.html", {"header": self.view_tas_header, "course_list": out})
         else:
             out = "Please log in to view TA assignments"
-            return render(request, "website/view_tas.html", {"header": self.view_courses_header, "course_list": out})
+            return render(request, "website/view_tas.html", {"header": self.view_tas_header, "course_list": out})
 
+class ViewContactInfo(View):
+    def get(self, request):
+        pass
+    def post(self, request):
+        pass

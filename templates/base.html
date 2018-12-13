@@ -41,8 +41,8 @@
             <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">View<span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href={% url 'viewcontact' %}>Contact Info</a></li>
-                    <li><a href="#">Course Assignments</a></li>
-                    <li><a href="#">Lab Assignments</a></li>
+                    <li><a href={% url 'viewcourses' %}>Course Assignments</a></li>
+                    <li><a href={% url 'viewtas' %}>Lab Assignments</a></li>
                 </ul>
         </ul>
         <ul class="nav navbar-nav navbar-right">
