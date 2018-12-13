@@ -29,9 +29,7 @@ class TestReadContactInfo(TestCase):
         self.tst_instructor.save()
         self.tst_ta.save()
 
-        # TODO: Create a string that is the expected output of read_contact_info()
-        # Will probably have some html formatting in it
-        self.expected_output = 'nothingYet'
+        self.expected_output = list(Account.objects.all())
 
     def test_supervisor_read_contact_info(self):
         self.ui.current_user = self.tst_supervisor
