@@ -46,7 +46,13 @@
                 </ul>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href=/login/?next={{  request.get_full_path|urlencode}}><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            {% if "user" in request.session and request.session.user is not None%}
+              <li class="navbar-text">logged In</li>
+             <li><a href=/logout/?next={{  request.get_full_path|urlencode}}><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+            {% else %}
+
+                <li><a href=/login/?next={{  request.get_full_path|urlencode}}><span class="glyphicon glyphicon-log-out"></span> Login</a></li>
+            {% endif %}
         </ul>
     </div>
   </div>

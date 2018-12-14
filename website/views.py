@@ -37,6 +37,26 @@ class Login(View):
         return render(request, "website/login.html", {"return_statement": out})
 
 
+class Logout(View):
+
+    def get(self, request):
+        co = Commands()
+        co.current_user.user = request.session["user"]
+        out = co.logout()
+        request.session["user"] = None
+        return render(request, "website/login.html", {"return_statement": out})
+
+    """def post(self, request):
+        co = Commands()
+        name = request.POST["user_name"]
+        password = request.POST["password"]
+        out = co.login(name, password)
+        request.session["user"] = co.current_user.user
+        if co.current_user.user == name and "redirect_to" in request.session:
+            return HttpResponseRedirect(request.session["redirect_to"])
+        return render(request, "website/login.html", {"return_statement": out})"""
+
+
 class CreateCourse(View):
     co = Commands()
     create_course_header = "Create A Course"
