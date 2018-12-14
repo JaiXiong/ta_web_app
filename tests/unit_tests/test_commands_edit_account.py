@@ -108,10 +108,7 @@ class TestEditAccount(TestCase):
         new_phone = '414-368-6425'
         self.ui.edit_account(self.tst_ta.user,
                              street_address=new_street, email_address=new_email, phone_number=new_phone)
-
-        # account object is updated in the returned list but tests still fail for some reason
-        sett = list(Account.objects.all())
-
+        self.tst_ta = Account.objects.get(user=self.tst_ta.user)
         self.assertEqual(self.tst_ta.street_address, new_street)
         self.assertEqual(self.tst_ta.email_address, new_email)
         self.assertEqual(self.tst_ta.phone_number, new_phone)
