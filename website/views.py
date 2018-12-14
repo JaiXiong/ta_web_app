@@ -160,16 +160,27 @@ class ViewContactInfo(View):
         if "user" in request.session:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
-        return render(request, "website/view_contact_info.html", {"header": self.view_contact_header})
+        return render(request, "website/view_contact_info.html", {"header": self.view_contact_header,
+                                                                  "return_statement": ""})
 
     def post(self, request):
         if "user" in request.session and request.session["user"] is not None:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
-            out = self.co.read_contact_info()
+            accounts = self.co.read_contact_info()
+            role = request.POST["select"]
+            account_list = []
+            if role == "All Users":
+                account_list = accounts
+            else:
+                for a in accounts:
+                    if a.role == role:
+                        account_list.append(a)
             return render(request, "website/view_contact_info.html", {"header": self.view_contact_header,
-                                                                      "return_statement": out})
+                                                                      "account_list": account_list,
+                                                                      "return_statement": ""})
         else:
-            out = "Please log in to assign an instructor to a course"
+            out = "Please log in to view contact information"
             return render(request, "website/view_contact_info.html", {"header": self.view_contact_header,
+                                                                      "account_list": "",
                                                                       "return_statement": out})

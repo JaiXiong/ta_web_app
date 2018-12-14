@@ -202,7 +202,9 @@ class Commands(CommandsInterface):
         return ''
 
     def read_contact_info(self):
-        return ''
+        if self.current_user == Account():
+            return 'Please login!'
+        return list(Account.objects.all())
 
     def edit_contact_info(self):
         return ''
