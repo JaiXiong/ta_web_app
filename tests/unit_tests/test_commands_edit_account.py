@@ -17,23 +17,105 @@ class TestEditAccount(TestCase):
         self.tst_instructor.save()
         self.tst_ta.save()
 
-    def test_edit_account_insufficient_permissions(self):
-        self.ui.login('usrSupervisor', 'password')
-        newPhone = '414-368-6425'
+    def test_no_current_user(self):
+        self.ui.current_user = Account()
+        new_phone = '414-368-6425'
         expected_output = 'Failed to edit account. Insufficient permissions'
-        actual_output = self.ui.edit_account(self.tst_ta.user, phone_number=newPhone)
-        self.assertNotEqual(expected_output, actual_output)
-
-    def test_edit_account_address(self):
-        self.ui.login('usrSupervisor', 'password')
-        newAddress = '1026 Lake Dr Milwaukee WI'
-        expected_output = 'Account information successfully changed'
-        actual_output = self.ui.edit_account(self.tst_ta.user, street_address=newAddress)
+        actual_output = self.ui.edit_account(self.tst_ta.user, phone_number=new_phone)
         self.assertEqual(expected_output, actual_output)
 
-    def test_edit_account_phone(self):
-        self.ui.login('usrSupervisor', 'password')
-        newPhone = '414-368-6425'
-        expected_output = 'Account information successfully changed'
-        actual_output = self.ui.edit_account(self.tst_ta.user, phone_number=newPhone)
+    def test_edit_account_as_ta(self):
+        self.ui.current_user = self.tst_ta
+        new_phone = '414-368-6425'
+        expected_output = 'Failed to edit account. Insufficient permissions'
+        actual_output1 = self.ui.edit_account(self.tst_ta.user, phone_number=new_phone)
+        actual_output2 = self.ui.edit_account(self.tst_instructor, phone_number=new_phone)
+        actual_output3 = self.ui.edit_account(self.tst_administrator, phone_number=new_phone)
+        actual_output4 = self.ui.edit_account(self.tst_supervisor, phone_number=new_phone)
+        self.assertEqual(expected_output, actual_output1)
+        self.assertEqual(expected_output, actual_output2)
+        self.assertEqual(expected_output, actual_output3)
+        self.assertEqual(expected_output, actual_output4)
+
+    def test_edit_account_as_instructor(self):
+        self.ui.current_user = self.tst_instructor
+        new_phone = '414-368-6425'
+        expected_output = 'Failed to edit account. Insufficient permissions'
+        actual_output1 = self.ui.edit_account(self.tst_ta.user, phone_number=new_phone)
+        actual_output2 = self.ui.edit_account(self.tst_instructor, phone_number=new_phone)
+        actual_output3 = self.ui.edit_account(self.tst_administrator, phone_number=new_phone)
+        actual_output4 = self.ui.edit_account(self.tst_supervisor, phone_number=new_phone)
+        self.assertEqual(expected_output, actual_output1)
+        self.assertEqual(expected_output, actual_output2)
+        self.assertEqual(expected_output, actual_output3)
+        self.assertEqual(expected_output, actual_output4)
+
+    def test_edit_supervisor_account_as_administrator(self):
+        self.ui.current_user = self.tst_administrator
+        new_phone = '414-368-6425'
+        expected_output = 'Failed to edit account. Insufficient permissions'
+        actual_output = self.ui.edit_account(self.tst_supervisor.user, phone_number=new_phone)
         self.assertEqual(expected_output, actual_output)
+
+    def test_edit_account_as_administrator(self):
+        self.ui.current_user = self.tst_administrator
+        new_phone = '414-368-6425'
+        expected_output = 'Account updated'
+        actual_output1 = self.ui.edit_account(self.tst_ta.user, phone_number=new_phone)
+        actual_output2 = self.ui.edit_account(self.tst_instructor.user, phone_number=new_phone)
+        actual_output3 = self.ui.edit_account(self.tst_administrator.user, phone_number=new_phone)
+        self.assertEqual(expected_output, actual_output1)
+        self.assertEqual(expected_output, actual_output2)
+        self.assertEqual(expected_output, actual_output3)
+
+    def test_edit_account_as_supervisor(self):
+        self.ui.current_user = self.tst_supervisor
+        new_phone = '414-368-6425'
+        expected_output = 'Account updated'
+        actual_output1 = self.ui.edit_account(self.tst_ta.user, phone_number=new_phone)
+        actual_output2 = self.ui.edit_account(self.tst_instructor.user, phone_number=new_phone)
+        actual_output3 = self.ui.edit_account(self.tst_administrator.user, phone_number=new_phone)
+        actual_output4 = self.ui.edit_account(self.tst_supervisor.user, phone_number=new_phone)
+        self.assertEqual(expected_output, actual_output1)
+        self.assertEqual(expected_output, actual_output2)
+        self.assertEqual(expected_output, actual_output3)
+        self.assertEqual(expected_output, actual_output4)
+
+    def test_edit_account_missing_username_arg(self):
+        self.ui.current_user = self.tst_supervisor
+        new_phone = '414-368-6425'
+        expected_output = 'Missing argument. Please enter a username of the account to be edited'
+        actual_output1 = self.ui.edit_account(username='', phone_number=new_phone)
+        actual_output2 = self.ui.edit_account(username=' ', phone_number=new_phone)
+        self.assertEqual(expected_output, actual_output1)
+        self.assertEqual(expected_output, actual_output2)
+
+    def test_edit_account_username_not_exist(self):
+        self.ui.current_user = self.tst_supervisor
+        new_phone = '414-368-6425'
+        expected_output = 'Failed to edit account. Username not found'
+        actual_output = self.ui.edit_account(username='notExist', phone_number=new_phone)
+        self.assertEqual(expected_output, actual_output)
+
+    def test_database_entry_correct(self):
+        self.ui.current_user = self.tst_supervisor
+        self.tst_ta.street_address = '123 Cherry Street Milwaukee WI 53210'
+        self.tst_ta.email_address = 'old@email.com'
+        self.tst_ta.phone_number = '262-500-3000'
+        self.tst_ta.save()
+        new_street = '1100 N GinNJuice Ln Margaritaville WI 12345'
+        new_email = 'new@email.com'
+        new_phone = '414-368-6425'
+        self.ui.edit_account(self.tst_ta.user,
+                             street_address=new_street, email_address=new_email, phone_number=new_phone)
+
+        # account object is updated in the returned list but tests still fail for some reason
+        sett = list(Account.objects.all())
+
+        self.assertEqual(self.tst_ta.street_address, new_street)
+        self.assertEqual(self.tst_ta.email_address, new_email)
+        self.assertEqual(self.tst_ta.phone_number, new_phone)
+
+
+
+

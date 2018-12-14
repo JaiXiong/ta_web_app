@@ -71,9 +71,35 @@ class Commands(CommandsInterface):
         account_to_delete.delete()
         return 'Successfully deleted account'
 
-    def edit_account(self, username='', password='', role='',
-                     first_name='', last_name='', street_address='', email_address='', phone_number=''):
-        return ''
+    def edit_account(self, username='', password='', role='', street_address='', email_address='', phone_number=''):
+        if self.current_user == Account():
+            return 'Please login'
+
+        # check that current user has correct permissions to edit account
+        cur_user_role = self.get_current_user().role
+        account_to_edit = self.get_account(username)
+        if cur_user_role != 'Supervisor' and cur_user_role != 'Administrator':
+            return 'Failed to edit account. Insufficient permissions'
+        if cur_user_role == 'Administrator' and account_to_edit.role == 'Supervisor':
+            return 'Failed to edit account. Insufficient permissions'
+
+        if username.strip(' ') == '':
+            return 'Missing argument. Please enter a username of the account to be edited'
+        if account_to_edit.id is None:
+            return 'Failed to edit account. Username not found'
+
+        if password.strip(' ') != '':
+            account_to_edit.password = password
+        if role.strip(' ') != '':
+            account_to_edit.role = role
+        if street_address.strip(' ') != '':
+            account_to_edit.street_address = street_address
+        if email_address.strip(' ') != '':
+            account_to_edit.email_address = email_address
+        if phone_number.strip(' ') != '':
+            account_to_edit.phone_number = phone_number
+        account_to_edit.save()
+        return 'Account updated'
 
     def create_course(self, name="", section="", days="", time="", labs=""):
         cur_user_role = self.get_current_user().role
@@ -244,7 +270,10 @@ class Commands(CommandsInterface):
             return 'Please login!'
         return list(Account.objects.all())
 
-    def edit_contact_info(self):
+    def edit_contact_info(self, street_address='', email_address='', phone_number=''):
+        if self.current_user == Account():
+            return 'Please login!'
+
         return ''
 
     def help(self):

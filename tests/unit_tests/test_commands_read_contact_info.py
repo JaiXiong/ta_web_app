@@ -29,7 +29,7 @@ class TestReadContactInfo(TestCase):
         self.tst_instructor.save()
         self.tst_ta.save()
 
-        self.expected_output = list(Account.objects.all())
+        self.expected_output = Account.objects.all()
 
     def test_supervisor_read_contact_info(self):
         self.ui.current_user = self.tst_supervisor

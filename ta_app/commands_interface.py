@@ -20,8 +20,7 @@ class CommandsInterface(abc.ABC):
         return ''
 
     @abc.abstractmethod
-    def edit_account(self, username, password, role,
-                     first_name, last_name, street_address, email_address, phone_number):
+    def edit_account(self, username, password, role, street_address, email_address, phone_number):
         return ''
 
     @abc.abstractmethod
@@ -53,7 +52,7 @@ class CommandsInterface(abc.ABC):
         return ''
 
     @abc.abstractmethod
-    def edit_contact_info(self):
+    def edit_contact_info(self, street_address, email_address, phone_number):
         return ''
 
     @abc.abstractmethod
