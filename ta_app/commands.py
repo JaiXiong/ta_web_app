@@ -223,13 +223,12 @@ class Commands(CommandsInterface):
     def view_ta_assignments(self):
         if self.current_user.user == "":
             return "Failed to view ta assignments. No current user"
-        output = ""
         course_list = list(Course.objects.all())
         course_list_final = []
         for course in course_list:
             if course.instructor is not None and course.tas is not None:
                 course_list_final.append(course)
-        return output
+        return course_list_final
 
     def read_contact_info(self):
         return ''

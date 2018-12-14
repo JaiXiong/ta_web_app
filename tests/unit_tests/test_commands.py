@@ -372,3 +372,4 @@ class TestCommands(TestCase):
         self.assertEqual(expected_output, actual_output)
         self.assertEqual(num_accounts_initial, num_accounts_final)
         self.assertEqual(num_courses_initial, num_courses_final)
+

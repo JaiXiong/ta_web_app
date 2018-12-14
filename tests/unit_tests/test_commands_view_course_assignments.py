@@ -38,7 +38,7 @@ class TestViewCourseAssignments(TestCase):
                              instructor=self.tst_instructor,
                              lab="333")
         test_course.save()
-        expected_output = "<p>Course: " + test_course.name + ", Instructor: " + self.tst_instructor.user + "</p><br />"
+        expected_output = list(Course.objects.all())
         actual_output = self.ui.view_course_assignments()
         self.assertEqual(expected_output, actual_output)
 
@@ -52,7 +52,7 @@ class TestViewCourseAssignments(TestCase):
                              instructor=self.tst_instructor,
                              lab="333")
         test_course.save()
-        expected_output = "<p>Course: " + test_course.name + ", Instructor: " + self.tst_instructor.user + "</p><br />"
+        expected_output = list(Course.objects.all())
         actual_output = self.ui.view_course_assignments()
         self.assertEqual(expected_output, actual_output)
 
@@ -66,7 +66,7 @@ class TestViewCourseAssignments(TestCase):
                              instructor=self.tst_instructor,
                              lab="333")
         test_course.save()
-        expected_output = "<p>Course: " + test_course.name + ", Instructor: " + self.tst_instructor.user + "</p><br />"
+        expected_output = list(Course.objects.all())
         actual_output = self.ui.view_course_assignments()
         self.assertEqual(expected_output, actual_output)
 
@@ -90,8 +90,7 @@ class TestViewCourseAssignments(TestCase):
                               instructor=test_instructor2,
                               lab="363")
         test_course2.save()
-        expected_output = "<p>Course: " + test_course1.name + ", Instructor: " + self.tst_instructor.user + "</p><br />" + \
-                          "<p>Course: " + test_course2.name + ", Instructor: " + test_instructor2.user + "</p><br />"
+        expected_output = list(Course.objects.all())
         actual_output = self.ui.view_course_assignments()
         self.assertEqual(expected_output, actual_output)
 
@@ -112,7 +111,7 @@ class TestViewCourseAssignments(TestCase):
                               instructor=self.tst_instructor,
                               lab="363")
         test_course2.save()
-        expected_output = "<p>Course: " + test_course2.name + ", Instructor: " + self.tst_instructor.user + "</p><br />"
+        expected_output = list(Course.objects.all())
         actual_output = self.ui.view_course_assignments()
         self.assertEqual(expected_output, actual_output)
 
@@ -133,7 +132,7 @@ class TestViewCourseAssignments(TestCase):
                              lab="333")
         test_course.save()
         test_course.tas.add(self.tst_ta)
-        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + " </p><br />"
+        expected_output = list(Course.objects.all())
         actual_output = self.ui.view_ta_assignments()
         self.assertEqual(expected_output, actual_output)
 
@@ -148,7 +147,7 @@ class TestViewCourseAssignments(TestCase):
                              lab="333")
         test_course.save()
         test_course.tas.add(self.tst_ta)
-        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + " </p><br />"
+        expected_output = list(Course.objects.all())
         actual_output = self.ui.view_ta_assignments()
         self.assertEqual(expected_output, actual_output)
 
@@ -163,7 +162,7 @@ class TestViewCourseAssignments(TestCase):
                              lab="333")
         test_course.save()
         test_course.tas.add(self.tst_ta)
-        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + " </p><br />"
+        expected_output = list(Course.objects.all())
         actual_output = self.ui.view_ta_assignments()
         self.assertEqual(expected_output, actual_output)
 
@@ -178,7 +177,7 @@ class TestViewCourseAssignments(TestCase):
                              lab="333")
         test_course.save()
         test_course.tas.add(self.tst_ta)
-        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + " </p><br />"
+        expected_output = list(Course.objects.all())
         actual_output = self.ui.view_ta_assignments()
         self.assertEqual(expected_output, actual_output)
 
@@ -196,7 +195,7 @@ class TestViewCourseAssignments(TestCase):
         test_course.save()
         test_course.tas.add(self.tst_ta)
         test_course.tas.add(test_ta2)
-        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + ", TA(s): " + self.tst_ta.user + " " + test_ta2.user + " </p><br />"
+        expected_output = list(Course.objects.all())
         actual_output = self.ui.view_ta_assignments()
         self.assertEqual(expected_output, actual_output)
 
@@ -222,9 +221,6 @@ class TestViewCourseAssignments(TestCase):
                               lab="363")
         test_course2.save()
         test_course2.tas.add(test_ta2)
-        expected_output = "<p>Course: " + test_course.name + ", Section: " + test_course.section + \
-                          ", TA(s): " + self.tst_ta.user + " </p><br />" + \
-                          "<p>Course: " + test_course2.name + ", Section: " + test_course2.section + \
-                          ", TA(s): " + test_ta2.user + " </p><br />"
+        expected_output = list(Course.objects.all())
         actual_output = self.ui.view_ta_assignments()
         self.assertEqual(expected_output, actual_output)
