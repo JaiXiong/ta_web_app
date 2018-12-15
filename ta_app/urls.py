@@ -16,7 +16,8 @@ Including another URLconf
 from django.conf.urls import url
 from django.urls import include, path
 from django.contrib import admin
-from website.views import Home, CreateCourse, AssignInstructor, AssignTaToCourse, AssignTaToLab, Login, ViewContactInfo, Logout
+from website.views import Home, CreateCourse, AssignInstructor, AssignTaToCourse, AssignTaToLab, \
+  Login, ViewContactInfo, Logout, CompleteLabs, CreateAccount, DeleteAccount, EditContactInfo, EditAccount
 
 urlpatterns = [
   url(r'^admin/', admin.site.urls),
@@ -27,5 +28,10 @@ urlpatterns = [
   path('assign_ta_to_lab/', AssignTaToLab.as_view(), name='assigntatolab'),
   path('login/', Login.as_view(), name="login"),
   path('view_contact_info/',ViewContactInfo.as_view(), name='viewcontact'),
-  path('logout/', Logout.as_view(), name='logout')
+  path('logout/', Logout.as_view(), name='logout'),
+  path('edit_lab/', CompleteLabs.as_view(), name='editlab'),
+  path('create_account/', CreateAccount.as_view(), name='createaccount'),
+  path('delete_account/', DeleteAccount.as_view(), name='deleteaccount'),
+  path('edit_contact_info/', EditContactInfo.as_view(), name="editcontactinfo"),
+  path('edit_account/', EditAccount.as_view(), name="editaccount")
 ]

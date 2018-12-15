@@ -1,22 +1,27 @@
-import unittest as ut
+import unittest
+from unittest.loader import makeSuite
+from tests.unit_tests.test_commands import TestCommands
+from tests.unit_tests.test_commands_assign_instructor import TestCommandsAssignInstructor
+from tests.unit_tests.test_commands_assign_ta_to_course import TestCommandsAssignTaToCourse
+from tests.unit_tests.test_commands_assign_ta_to_lab import TestCommandsAssignTaToLab
+from tests.unit_tests.test_commands_create_course import TestCommandsCreateCourse
+from tests.unit_tests.test_commands_edit_account import TestEditAccount
+from tests.unit_tests.test_commands_edit_contact_info import TestEditContactInfo
+"""from tests.unit_tests.test_commands_view_course_assignments import TestViewCourseAssignments"""
+from tests.unit_tests.test_commands_read_contact_info import TestReadContactInfo
 
-from tests.unit_tests.test_account_object import TestAccountObject
-from tests.unit_tests.test_course_object import TestCourseObject
-from tests.unit_tests.test_ui_command import TestUiCommand
-from tests.unit_tests.test_superuser_login import TestSuperuserLogin
-from tests.unit_tests.test_db_text import TestDBText
-from tests.unit_tests.test_ui import TestUI
+suite = unittest.TestSuite()
+suite.addTest(makeSuite(TestCommands))
+suite.addTest(makeSuite(TestCommandsAssignInstructor))
+suite.addTest(makeSuite(TestCommandsAssignTaToCourse))
+suite.addTest(makeSuite(TestCommandsAssignTaToLab))
+suite.addTest(makeSuite(TestCommandsCreateCourse))
+suite.addTest(makeSuite(TestEditAccount))
+suite.addTest(makeSuite(TestEditContactInfo))
+"""suite.addTest(makeSuite(TestViewCourseAssignments))"""
+suite.addTest(makeSuite(TestReadContactInfo))
 
-
-
-suite = ut.TestSuite()
-suite.addTest(ut.makeSuite(TestAccountObject))
-suite.addTest(ut.makeSuite(TestCourseObject))
-suite.addTest(ut.makeSuite(TestUiCommand))
-suite.addTest(ut.makeSuite(TestSuperuserLogin))
-suite.addTest(ut.makeSuite(TestDBText))
-suite.addTest((ut.makeSuite(TestUI)))
-runner = ut.TextTestRunner()
+runner = unittest.TextTestRunner()
 res = runner.run(suite)
 print(res)
 print("*" * 20)
@@ -24,4 +29,4 @@ for i in res.failures:
     print(i[1])
 
 if __name__ == '__main__':
-    ut.main()
+    unittest.main()

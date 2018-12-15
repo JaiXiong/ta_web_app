@@ -52,7 +52,7 @@ class TestCommandsAssignTaToLab(TestCase):
 
     # test roles other than supervisor or Instructor can not assign tas to courses
     def test_CommandsAssignTaToLab1(self):
-        self.co.current_user = self.Account1
+        self.co.current_user = self.Account2
         response = self.co.assign_ta_to_lab('Joe', 'CS-337', "002")
         self.assertEqual("You do not have permissions to assign TAs to labs", response)
 
@@ -63,17 +63,17 @@ class TestCommandsAssignTaToLab(TestCase):
 
     # test assigning a user to a lab that's not in the data base
     def test_CommandsAssignTaToLab3(self):
-        response = self.co.assign_ta_to_lab('337', 'Gus', '003')
+        response = self.co.assign_ta_to_lab('Gus', '337',  '003')
         self.assertEqual("This user is not present in the data base", response)
 
     # test assigning an TA to a lab of a course not in the data base
     def test_CommandsAssignTaToLab4(self):
-        response = self.co.assign_ta_to_lab('CS-999', 'Joe', '001')
+        response = self.co.assign_ta_to_lab('Joe', 'CS-999', '001')
         self.assertEqual("This course is not present in the data base", response)
 
     # test assigning a TA to a lab that does not exist for the given course
     def test_CommandsAssignTaToLab5(self):
-        response = self.co.assign_ta_to_lab('CS-337', 'Joe', '999')
+        response = self.co.assign_ta_to_lab('Joe', 'CS-337', '999')
         self.assertEqual("Course CS-337 does not have lab section 999 present in the data base", response)
 
     # test assigning a TA to a lab section that is not already assigned to its course

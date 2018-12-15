@@ -53,11 +53,53 @@ class Commands(CommandsInterface):
         new_account.save()
         return 'Successfully created account'
 
-    def delete_account(self, user, password, role):
-        return ''
+    def delete_account(self, username=''):
+        if username == '':
+            return 'Failed to delete account. Invalid or missing argument'
 
-    def edit_account(self, user):
-        return ''
+        account_to_delete = self.get_account(username)
+        cur_user_role = self.get_current_user().role
+        if cur_user_role != 'Supervisor' and cur_user_role != 'Administrator':
+            return 'Failed to delete account. Insufficient permissions'
+        if cur_user_role == 'Administrator' and account_to_delete.role == 'Supervisor':
+            return 'Failed to delete account. Insufficient permissions'
+        if account_to_delete.id is None:
+            return 'Failed to delete account. User not found'
+        if Course.objects.filter(instructor=account_to_delete).exists():
+            return 'Failed to delete account. User is assigned to a course'
+
+        account_to_delete.delete()
+        return 'Successfully deleted account'
+
+    def edit_account(self, username='', password='', role='', street_address='', email_address='', phone_number=''):
+        if self.current_user == Account():
+            return 'Please login'
+
+        # check that current user has correct permissions to edit account
+        cur_user_role = self.get_current_user().role
+        account_to_edit = self.get_account(username)
+        if cur_user_role != 'Supervisor' and cur_user_role != 'Administrator':
+            return 'Failed to edit account. Insufficient permissions'
+        if cur_user_role == 'Administrator' and account_to_edit.role == 'Supervisor':
+            return 'Failed to edit account. Insufficient permissions'
+
+        if username.strip(' ') == '':
+            return 'Missing argument. Please enter a username of the account to be edited'
+        if account_to_edit.id is None:
+            return 'Failed to edit account. Username not found'
+
+        if password.strip(' ') != '':
+            account_to_edit.password = password
+        if role.strip(' ') != '':
+            account_to_edit.role = role
+        if street_address.strip(' ') != '':
+            account_to_edit.street_address = street_address
+        if email_address.strip(' ') != '':
+            account_to_edit.email_address = email_address
+        if phone_number.strip(' ') != '':
+            account_to_edit.phone_number = phone_number
+        account_to_edit.save()
+        return 'Account updated'
 
     def create_course(self, name="", section="", days="", time="", labs=""):
         cur_user_role = self.get_current_user().role
@@ -127,6 +169,64 @@ class Commands(CommandsInterface):
                             those_et = c.end_time.replace(":", "")
                             return self.overlap(this_st, this_et, those_st, those_et)
 
+    def edit_lab(self, course_name="", section="", days="", time=""):
+        cur_user_role = self.get_current_user().role
+        if cur_user_role != "Supervisor" and cur_user_role != "Administrator":
+            return "You do not have permissions to edit labs"
+        if course_name == "" or section == "" or days == "" or time == "":
+            return "Please input valid arguments for all fields to edit a lab"
+        else:
+            d = days.split("/")
+            valid1 = True
+            for day in d:
+                if day not in ["M", "T", "W", "R", "F", "S", "U", "O"]:
+                    valid1 = False
+
+            times = time.split("-")
+            stl = times[0].split(":")
+            etl = times[1].split(":")
+
+            co = Course.objects.get(name=course_name)
+            if not Course.objects.filter(name=course_name).exists():
+                return "Course " + course_name + " is not present in the data base"
+            if not Lab.objects.filter(course=co, section=section).exists():
+                return "Lab " + course_name + " - " + section + " is not present in the data base"
+            if len(section) > 3 or not section.isnumeric():
+                return "Section must be a three digit number"
+            if not valid1:
+                return "Days of week are noted as M, T, W, R, F, S, U, O"
+            if len(times[0]) > 5 or int(stl[0]) > 23 or int(stl[1]) > 59:
+                return "valid start time is 00:00 to 23:59"
+            if len(times[1]) > 5 or int(etl[0]) > 23 or int(etl[1]) > 59:
+                return "valid end time is 00:00 to 23:59"
+            if stl[0] > etl[0] or (stl[0] == etl[0] and stl[1] > etl[1]):
+                return "end time can not be earlier than start time"
+
+            lo = Lab.objects.get(course=co, section=section)
+
+            lo = Lab.objects.get(course=co, section=section)
+            lo.days_of_week = days
+            times = time
+            times_split = times.split("-")
+            lo.start_time = times_split[0]
+            lo.end_time = times_split[1]
+
+            these_days = lo.days_of_week.split("/")
+            this_st = lo.start_time.replace(":", "")
+            this_et = lo.end_time.replace(":", "")
+
+            those_days = co.days_of_week.split("/")
+            for d in these_days:
+                for cd in those_days:
+                    if cd == d:
+                        those_st = co.start_time.replace(":", "")
+                        those_et = co.end_time.replace(":", "")
+                        if self.overlap(this_st, this_et, those_st, those_et):
+                            return "This lab's timing conflicts with it's lecture time"
+
+            lo.save()
+            return "Lab " + course_name + " " + section + " has been updated"
+
     def assign_instructor(self, user="", course=""):
         if user == "" or course == "":
             return "Please input valid arguments for both fields to assign an instructor to a course"
@@ -165,7 +265,7 @@ class Commands(CommandsInterface):
                 return "This course conflicts with the TA's current schedule"
             this_course.tas.add(account)
             this_course.save()
-            return user + " has been added to as a TA to " + course
+            return user + " has been added as a TA to " + course
 
     def assign_ta_to_lab(self, user="", course="", lab=""):
         if user == "" or course == "" or lab == "":
@@ -206,8 +306,28 @@ class Commands(CommandsInterface):
             return 'Please login!'
         return list(Account.objects.all())
 
-    def edit_contact_info(self):
-        return ''
+    def edit_contact_info(self, username='', password='', street_address="", email_address="", phone_number=""):
+        if self.current_user == Account() or self.current_user is None:
+            return "Can not edit account. No current user"
+            # check that current user has correct permissions to edit account
+        cur_user_role = self.get_current_user().role
+        account_to_edit = self.get_account(username)
+        if account_to_edit.user == "":
+            return 'No users with that username'
+        if cur_user_role == "TA":
+            return 'Insufficient permissions to edit account'
+        if cur_user_role == 'Administrator' and account_to_edit.role == 'Supervisor':
+            return 'Insufficient permissions to edit account'
+        account_to_edit.user = username
+        account_to_edit.password = password
+        if street_address != "":
+            account_to_edit.street_address = street_address
+        if email_address != "":
+            account_to_edit.email_address = email_address
+        if phone_number != "":
+            account_to_edit.phone_number = phone_number
+        account_to_edit.save()
+        return account_to_edit
 
     def help(self):
         commands = '<ol>'

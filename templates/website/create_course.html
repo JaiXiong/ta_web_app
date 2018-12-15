@@ -3,51 +3,57 @@
     <Body>
     <h1>{{ header }}</h1>
     <br/>
-    <form method="post" action="">
-    {% csrf_token %}
-
     <div class="row">
         <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
-            <div class="form-group">
-                <label for="course_name">Course Name</label>
-                <input type="text" class="form-control" name="course_name"  placeholder="example: CS-361">
-            </div>
-            <br/>
-            <div class="form-group">
-                <label for="course_section">Course Section</label>
-                <input type="text" class="form-control" name="course_section" placeholder="example: 001">
-            </div>
-            <br/>
-            <div class="form-group">
-                <label for="course_days">Days of the Week</label>
-                <input type="text" class="form-control" name="course_days" aria-describedby="days_help" placeholder="example: M/W/F">
-                <small id="days_help" class="form-text text-muted">Represented as M/T/W/T/F/S/U and O for online.</small>
-             </div>
-            <br/>
-            <div class="form-group">
-                <label for="course_time">Course Time</label>
-                <input type="text" class="form-control" name="course_time" aria-describedby="time_help" placeholder="example: 13:00-14:45">
-                <small id="time_help" class="form-text text-muted">Represented in military time.</small>
-            </div>
-            <br/>
-            <div class="form-group">
-                <label for="lab_sections">Lab Sections</label>
-                <input type="text" class="form-control" name="lab_sections" aria-describedby="lab_help" placeholder="example: 402/403/404">
-                <small id="lab_help" class="form-text text-muted">Will need to be completed with dates and times before assigning TAs.</small>
-            </div>
-            <br/>
-            {% if return_statement != None %}
-            <div class="alert alert-warning fade in">
-                <a href="#" class="close" data-dismiss="alert">&times;</a>
-                <strong>Attention: </strong> {{ return_statement }}
-            </div>
-            <br/>
-            {% endif %}
-            <button type="submit" class="btn btn-danger">Submit</button>
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="course_name">Course Name</label>
+                    <input type="text" class="form-control" name="course_name" placeholder="example: CS-361">
+                </div>
+                <br/>
+                <div class="form-group">
+                    <label for="course_section">Course Section</label>
+                    <input type="text" class="form-control" name="course_section" placeholder="example: 001">
+                </div>
+                <br/>
+                <div class="form-group">
+                    <label for="course_days">Days of the Week</label>
+                    <input type="text" class="form-control" name="course_days" aria-describedby="days_help"
+                           placeholder="example: M/W/F">
+                    <small id="days_help" class="form-text text-muted">Represented as M/T/W/T/F/S/U and O for online.
+                    </small>
+                </div>
+                <br/>
+                <div class="form-group">
+                    <label for="course_time">Course Time</label>
+                    <input type="text" class="form-control" name="course_time" aria-describedby="time_help"
+                           placeholder="example: 13:00-14:45">
+                    <small id="time_help" class="form-text text-muted">Represented in military time.</small>
+                </div>
+                <br/>
+                <div class="form-group">
+                    <label for="lab_sections">Lab Sections</label>
+                    <input type="text" class="form-control" name="lab_sections" aria-describedby="lab_help"
+                           placeholder="example: 402/403/404">
+                    <small id="lab_help" class="form-text text-muted">Go to Edit Labs to add dates and times
+                        before assigning TAs.
+                    </small>
+                </div>
+                <br/>
+                {% if return_statement != None %}
+                    <div class="alert alert-warning fade in">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Attention: </strong> {{ return_statement }}
+                    </div>
+                    <br/>
+                {% endif %}
+                <button type="submit" class="btn btn-danger">Submit</button>
+                <br/>
+            </form>
         </div>
     </div>
-    </form>
-    <div id="out">{{out|safe}}</div>
+    <div id="out">{{ out|safe }}</div>
     </Body>
 
 {% endblock content %}

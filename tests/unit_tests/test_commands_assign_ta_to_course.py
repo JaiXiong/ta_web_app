@@ -54,12 +54,12 @@ class TestCommandsAssignTaToCourse(TestCase):
     # test calling method without all valid parameters
     def test_CommandsAssignTaToCourse5(self):
         response = self.co.assign_instructor('Joe')
-        self.assertEqual(response, "Please input valid arguments for both fields to create assign "
+        self.assertEqual(response, "Please input valid arguments for both fields to assign "
                                    "an instructor to a course")
 
     # test that instructor is added to course wit proper conditions
     def test_CommandsAssignTaToCourse6(self):
         response = self.co.assign_ta_to_course('Joe', 'CS-361')
-        self.assertEqual(response, 'Joe has been added to as a TA to CS-361')
+        self.assertEqual(response, 'Joe has been added as a TA to CS-361')
         assigned = Course.objects.filter(name='CS-361', tas=self.Account2).exists()
         self.assertEqual(True, assigned)

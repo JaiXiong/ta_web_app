@@ -54,7 +54,7 @@ class TestCommandsAssignInstructor(TestCase):
     # test calling method without all valid parameters
     def test_CommandsAssignInstructor5(self):
         response = self.co.assign_instructor('Joe')
-        self.assertEqual(response, "Please input valid arguments for both fields to create assign an instructor to a "
+        self.assertEqual(response, "Please input valid arguments for both fields to assign an instructor to a "
                                    "course")
 
     # test that instructor is added to course wit proper conditions

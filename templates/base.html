@@ -26,14 +26,15 @@
         <ul class="nav navbar-nav">
             <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Accounts<span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">Create Account</a></li>
-                    <li><a href="#">Edit Account</a></li>
-                    <li><a href="#">Delete Account</a></li>
-                    <li><a href="#">Edit Contact Info</a></li>
+                    <li><a href={% url 'createaccount' %}>Create Account</a></li>
+                    <li><a href={% url 'editaccount' %}>Edit Account</a></li>
+                    <li><a href={% url 'deleteaccount' %}>Delete Account</a></li>
+                    <li><a href={% url "editcontactinfo" %}>Edit Contact Info</a></li>
                 </ul>
             <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Courses<span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href={% url 'createcourse' %}>Create Course</a></li>
+                    <li><a href={% url 'editlab' %}>Edit Lab</a></li>
                     <li><a href={% url 'assigninstructor' %}>Assign Instructors</a></li>
                     <li><a href={% url 'assigntatocourse' %}>Assign TA to Course</a></li>
                     <li><a href={% url 'assigntatolab' %}>Assign TA to Lab</a></li>
