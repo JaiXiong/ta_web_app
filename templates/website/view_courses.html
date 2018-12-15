@@ -4,29 +4,33 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>View Courses</title>
+        <h1>{{ header }}</h1>
     </head>
     <body>
         <br />
-        {% if course_list is "Failed to view course assignments. No current user" or course_list is "Failed to view course assignments. Insufficient permissions"%}
-            {{ course_list }}
-        {% else %}
-            <table>
-                {% for course in course_list %}
-                    <tr>
-                         <td>
-                            Course: {{ course.name }}
-                        </td>
-                        <td>
-                            Section: {{ course.section }}
-                        </td>
-                        <td>
-                            Instructor: {{ course.instructor }}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-        {% endif %}
+        <div class="row">
+            <div class="col-lg-2 col-lg-offset-5 col-md-2 col-md-offset-5 col-sm-4 col-sm-offset-4 col-xs-4 col-xs-offset-4">
+                {% if course_list is "Failed to view course assignments. No current user" or course_list is "Failed to view course assignments. Insufficient permissions"%}
+                    {{ course_list }}
+                {% else %}
+                    <table>
+                        {% for course in course_list %}
+                            <tr>
+                                 <td>
+                                    Course: {{ course.name }}
+                                </td>
+                                <td>
+                                    Section: {{ course.section }}
+                                </td>
+                                <td>
+                                    Instructor: {{ course.instructor }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
+            </div>
+        </div>
     </body>
 </html>
 {% endblock content %}

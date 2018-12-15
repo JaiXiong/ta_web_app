@@ -19,7 +19,7 @@ class Home(View):
 class Login(View):
 
     def get(self, request):
-        if "user" not in request.session:
+        if "user" not in request.session and request.session["user"] is not None:
             request.session["user"] = None
         request.session['redirect_to'] = request.GET['next']
         return render(request, "website/login.html")
@@ -40,7 +40,7 @@ class CreateCourse(View):
     create_course_header = "Create A Course"
 
     def get(self, request):
-        if "user" in request.session:
+        if "user" in request.session and request.session["user"] is not None:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
         return render(request, "website/create_course.html", {"header": self.create_course_header})
@@ -69,7 +69,7 @@ class AssignInstructor(View):
     ta_to_lab = False
 
     def get(self, request):
-        if "user" in request.session:
+        if "user" in request.session and request.session["user"] is not None:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
         return render(request, "website/assign.html", {"header": self.instructor_header,
@@ -98,7 +98,7 @@ class AssignTaToCourse(View):
     ta_to_lab = False
 
     def get(self, request):
-        if "user" in request.session and "user" in request.session:
+        if "user" in request.session and "user" in request.session and request.session["user"] is not None:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
         return render(request, "website/assign.html", {"header": self.ta_to_course_header,
@@ -126,7 +126,7 @@ class AssignTaToLab(View):
     ta_to_lab = True
 
     def get(self, request):
-        if "user" in request.session:
+        if "user" in request.session and request.session["user"] is not None:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
         return render(request, "website/assign.html", {"header": self.ta_to_lab_header,
@@ -154,7 +154,7 @@ class ViewCourses(View):
     view_courses_header = "View Courses"
 
     def get(self, request):
-        if request.session["user"] is not None:
+        if request.session["user"] is not None and request.session["user"] is not None:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
             out = self.co.view_course_assignments()
@@ -172,7 +172,7 @@ class ViewTAs(View):
     view_tas_header = "View TAs"
 
     def get(self, request):
-        if request.session["user"] is not None:
+        if request.session["user"] is not None and request.session["user"] is not None:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
             out = self.co.view_ta_assignments()
@@ -190,7 +190,7 @@ class ViewContactInfo(View):
     view_contact_header = "Contact Information"
 
     def get(self, request):
-        if "user" in request.session:
+        if "user" in request.session and request.session["user"] is not None:
             ao = Account.objects.get(user=request.session["user"])
             self.co.current_user = ao
         return render(request, "website/view_contact_info.html", {"header": self.view_contact_header})

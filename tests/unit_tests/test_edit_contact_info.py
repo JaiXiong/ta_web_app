@@ -2,6 +2,7 @@ from django.test import TestCase
 from ta_app.commands import Commands
 from website.models import Account
 
+
 class TestEditContactInfo(TestCase):
 
     def setUp(self):
@@ -21,28 +22,28 @@ class TestEditContactInfo(TestCase):
         expected_output = "No users with that username"
         self.ui.login(self.tst_instructor.user, self.tst_instructor.password)
         new_addr = "1333 New Drive"
-        actual_output = self.ui.edit_account(username=self.tst_ta, street_address=new_addr)
+        actual_output = self.ui.edit_contact_info(username=self.tst_ta, street_address=new_addr)
         self.assertEqual(expected_output, actual_output)
 
     def test_edit_contact_info_no_user_no_data(self):
         expected_output = "Can not edit account. No current user"
-        actual_output = self.ui.edit_account()
+        actual_output = self.ui.edit_contact_info()
         self.assertEqual(expected_output, actual_output)
 
     def test_edit_contact_info_no_user_data(self):
         expected_output = "Can not edit account. No current user"
-        actual_output = self.ui.edit_account(user='usrInstructor', password='password', role='Instructor', street_address="123 Instructor Drive", email_address="instructor@school.org", phone_number="222-333-4444")
+        actual_output = self.ui.edit_contact_info(user='usrInstructor', password='password', role='Instructor', street_address="123 Instructor Drive", email_address="instructor@school.org", phone_number="222-333-4444")
         self.assertEqual(expected_output, actual_output)
 
     def test_edit_contact_info_user_insufficient_permissions(self):
         self.ui.login(self.tst_ta.user, self.tst_ta.password)
         expected_output = "Insufficient permissions to edit account"
-        actual_output = self.ui.edit_account(username=self.tst_ta, street_address="invalid")
+        actual_output = self.ui.edit_contact_info(username=self.tst_ta.user, password=self.tst_ta.password, street_address="invalid")
         self.assertEqual(expected_output, actual_output)
 
     def test_edit_contact_info_user_instructor_no_data(self):
         self.ui.login(self.tst_instructor.user, self.tst_instructor.password)
-        actual_output = self.ui.edit_account(username=self.tst_instructor.user)
+        actual_output = self.ui.edit_contact_info(username=self.tst_instructor.user, password=self.tst_administrator.password)
         self.assertEqual(self.tst_instructor.user, actual_output.user)
         self.assertEqual(self.tst_instructor.password, actual_output.password)
         self.assertEqual(self.tst_instructor.role, actual_output.role)
@@ -52,7 +53,7 @@ class TestEditContactInfo(TestCase):
 
     def test_edit_contact_info_user_administrator_no_data(self):
         self.ui.login(self.tst_administrator.user, self.tst_administrator.password)
-        actual_output = self.ui.edit_account(username=self.tst_administrator.user)
+        actual_output = self.ui.edit_contact_info(username=self.tst_administrator.user, password=self.tst_administrator.password)
         self.assertEqual(self.tst_administrator.user, actual_output.user)
         self.assertEqual(self.tst_administrator.password, actual_output.password)
         self.assertEqual(self.tst_administrator.role, actual_output.role)
@@ -63,47 +64,47 @@ class TestEditContactInfo(TestCase):
     def test_edit_account_info_street_address(self):
         self.ui.login(self.tst_instructor.user, self.tst_instructor.password)
         new_addr = "1333 New Drive"
-        actual_output = self.ui.edit_account(username=self.tst_instructor, street_address=new_addr)
+        actual_output = self.ui.edit_contact_info(username=self.tst_instructor.user, password=self.tst_instructor.password, street_address=new_addr)
         self.assertEqual(self.tst_instructor.user, actual_output.user)
         self.assertEqual(self.tst_instructor.password, actual_output.password)
         self.assertEqual(self.tst_instructor.role, actual_output.role)
-        self.assertEqual(self.tst_instructor.street_address, actual_output.street_address)
+        self.assertEqual(new_addr, actual_output.street_address)
         self.assertEqual(self.tst_instructor.email_address, actual_output.email_address)
         self.assertEqual(self.tst_instructor.phone_number, actual_output.phone_number)
 
     def test_edit_account_info_email(self):
         self.ui.login(self.tst_instructor.user, self.tst_instructor.password)
         new_email = "new@email.com"
-        actual_output = self.ui.edit_account(username=self.tst_instructor, email_address=new_email)
+        actual_output = self.ui.edit_contact_info(username=self.tst_instructor.user, password=self.tst_instructor.password, email_address=new_email)
         self.assertEqual(self.tst_instructor.user, actual_output.user)
         self.assertEqual(self.tst_instructor.password, actual_output.password)
         self.assertEqual(self.tst_instructor.role, actual_output.role)
         self.assertEqual(self.tst_instructor.street_address, actual_output.street_address)
-        self.assertEqual(self.tst_instructor.email_address, actual_output.email_address)
+        self.assertEqual(new_email, actual_output.email_address)
         self.assertEqual(self.tst_instructor.phone_number, actual_output.phone_number)
 
     def test_edit_account_phone_number(self):
         self.ui.login(self.tst_instructor.user, self.tst_instructor.password)
         new_phone = "111-111-1111"
-        actual_output = self.ui.edit_account(username=self.tst_instructor, phone_number=new_phone)
+        actual_output = self.ui.edit_contact_info(username=self.tst_instructor.user, password=self.tst_instructor.password, phone_number=new_phone)
         self.assertEqual(self.tst_instructor.user, actual_output.user)
         self.assertEqual(self.tst_instructor.password, actual_output.password)
         self.assertEqual(self.tst_instructor.role, actual_output.role)
         self.assertEqual(self.tst_instructor.street_address, actual_output.street_address)
         self.assertEqual(self.tst_instructor.email_address, actual_output.email_address)
-        self.assertEqual(self.tst_instructor.phone_number, actual_output.phone_number)
+        self.assertEqual(new_phone, actual_output.phone_number)
 
     def test_edit_account_multiple(self):
         self.ui.login(self.tst_instructor.user, self.tst_instructor.password)
         new_addr = "1333 New Drive"
         new_phone = "111-111-1111"
-        actual_output = self.ui.edit_account(username=self.tst_instructor, street_address=new_addr, phone_number=new_phone)
+        actual_output = self.ui.edit_contact_info(username=self.tst_instructor.user, password=self.tst_instructor.password, street_address=new_addr, phone_number=new_phone)
         self.assertEqual(self.tst_instructor.user, actual_output.user)
         self.assertEqual(self.tst_instructor.password, actual_output.password)
         self.assertEqual(self.tst_instructor.role, actual_output.role)
-        self.assertEqual(self.tst_instructor.street_address, actual_output.street_address)
+        self.assertEqual(new_addr, actual_output.street_address)
         self.assertEqual(self.tst_instructor.email_address, actual_output.email_address)
-        self.assertEqual(self.tst_instructor.phone_number, actual_output.phone_number)
+        self.assertEqual(new_phone, actual_output.phone_number)
 
 
 

@@ -232,31 +232,26 @@ class Commands(CommandsInterface):
     def read_contact_info(self):
         return ''
 
-    def edit_contact_info(self, username='', street_address="", email_address="", phone_number=""):
+    def edit_contact_info(self, username='', password='', street_address="", email_address="", phone_number=""):
         if self.current_user == Account():
             return 'Please login'
-
             # check that current user has correct permissions to edit account
         cur_user_role = self.get_current_user().role
         account_to_edit = self.get_account(username)
-        if cur_user_role != 'Supervisor' and cur_user_role != 'Administrator':
+        if cur_user_role == "TA":
             return 'Failed to edit account. Insufficient permissions'
         if cur_user_role == 'Administrator' and account_to_edit.role == 'Supervisor':
             return 'Failed to edit account. Insufficient permissions'
-
-        if username.strip(' ') == '':
-            return 'Missing argument. Please enter a username of the account to be edited'
-        if account_to_edit.id is None:
-            return 'Failed to edit account. Username not found'
-
-        if street_address.strip(' ') != '':
+        account_to_edit.user = username
+        account_to_edit.password = password
+        if street_address != "":
             account_to_edit.street_address = street_address
-        if email_address.strip(' ') != '':
+        if email_address != "":
             account_to_edit.email_address = email_address
-        if phone_number.strip(' ') != '':
-            account_to_edit.phone_number = phone_number
+        if phone_number != "":
+            pass
         account_to_edit.save()
-        return 'Account updated'
+        return account_to_edit
 
     def help(self):
         commands = '<ol>'
