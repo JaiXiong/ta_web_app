@@ -21,7 +21,7 @@ class Home(View):
 class Login(View):
 
     def get(self, request):
-        if "user" not in request.session:
+        if "user" not in request.session and request.session["user"] is not None:
             request.session["user"] = None
         request.session['redirect_to'] = request.GET['next']
         return render(request, "website/login.html")
@@ -33,7 +33,8 @@ class Login(View):
         out = co.login(name, password)
         if out == 'login failed! bad username/ password':
             request.session["user"] = None
-        request.session["user"] = co.current_user.user
+        else:
+            request.session["user"] = co.current_user.user
         if co.current_user.user == name and "redirect_to" in request.session:
             return HttpResponseRedirect(request.session["redirect_to"])
         return render(request, "website/login.html", {"return_statement": out})
@@ -304,9 +305,10 @@ class EditContactInfo(View):
                 current_phone = "No current phone number on record"
 
             return render(request, "website/edit_contact_info.html", {"current_user": current_user,
-                                                             "current_street": current_street,
-                                                             "current_email": current_email,
-                                                             "current_phone": current_phone})
+                                                                      "current_password": current_password,
+                                                                      "current_street": current_street,
+                                                                      "current_email": current_email,
+                                                                      "current_phone": current_phone})
 
     def post(self, request):
         if "user" in request.session and request.session["user"] is not None:
@@ -316,7 +318,7 @@ class EditContactInfo(View):
             password = request.POST["password"]
             street_address = request.POST["street_address"]
             email_address = request.POST["email_address"]
-            phone_number = request.POST["email_address"]
+            phone_number = request.POST["phone_number"]
 
             if password == "":
                 password = self.co.get_account(user).password
@@ -330,7 +332,7 @@ class EditContactInfo(View):
             if phone_number == "":
                 phone_number = ao.phone_number
 
-            out = self.co.edit_account(user, password, street_address, email_address, phone_number)
+            out = self.co.edit_contact_info(user, password, street_address, email_address, phone_number)
 
             return render(request, "website/edit_contact_info.html", {"current_user": self.co.current_user.user,
                                                                       "current_role": self.co.current_user.role,

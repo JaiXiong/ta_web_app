@@ -47,7 +47,7 @@
                 </ul>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            {% if "user" in request.session and request.session.user is not None%}
+            {% if "user" in request.session and ctx_user != None%}
               <li class="navbar-text">logged In</li>
              <li><a href=/logout/?next={{  request.get_full_path|urlencode}}><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
             {% else %}

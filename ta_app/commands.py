@@ -312,10 +312,6 @@ class Commands(CommandsInterface):
             # check that current user has correct permissions to edit account
         cur_user_role = self.get_current_user().role
         account_to_edit = self.get_account(username)
-        if account_to_edit.user == "":
-            return 'No users with that username'
-        if cur_user_role == "TA":
-            return 'Insufficient permissions to edit account'
         if cur_user_role == 'Administrator' and account_to_edit.role == 'Supervisor':
             return 'Insufficient permissions to edit account'
         account_to_edit.user = username
@@ -327,7 +323,7 @@ class Commands(CommandsInterface):
         if phone_number != "":
             account_to_edit.phone_number = phone_number
         account_to_edit.save()
-        return account_to_edit
+        return "Account has been updated"
 
     def help(self):
         commands = '<ol>'
