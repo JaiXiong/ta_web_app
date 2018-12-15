@@ -18,21 +18,23 @@ class TestEditContactInfo(TestCase):
         self.tst_ta.save()
 
     def test_edit_contact_info_no_user_inDB(self):
-        Account.objects.filter(user="usrTA").delete()
+        Account.objects.filter(user="usrTA").all().delete()
         expected_output = "No users with that username"
         self.ui.login(self.tst_instructor.user, self.tst_instructor.password)
         new_addr = "1333 New Drive"
-        actual_output = self.ui.edit_contact_info(username=self.tst_ta, street_address=new_addr)
+        actual_output = self.ui.edit_contact_info(username=self.tst_ta.user, street_address=new_addr)
         self.assertEqual(expected_output, actual_output)
 
     def test_edit_contact_info_no_user_no_data(self):
+        self.ui.current_user = None
         expected_output = "Can not edit account. No current user"
         actual_output = self.ui.edit_contact_info()
         self.assertEqual(expected_output, actual_output)
 
     def test_edit_contact_info_no_user_data(self):
+        self.ui.current_user = None
         expected_output = "Can not edit account. No current user"
-        actual_output = self.ui.edit_contact_info(user='usrInstructor', password='password', role='Instructor', street_address="123 Instructor Drive", email_address="instructor@school.org", phone_number="222-333-4444")
+        actual_output = self.ui.edit_contact_info(username='usrInstructor', password='password', street_address="123 Instructor Drive", email_address="instructor@school.org", phone_number="222-333-4444")
         self.assertEqual(expected_output, actual_output)
 
     def test_edit_contact_info_user_insufficient_permissions(self):

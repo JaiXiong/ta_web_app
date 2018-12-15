@@ -233,15 +233,17 @@ class Commands(CommandsInterface):
         return ''
 
     def edit_contact_info(self, username='', password='', street_address="", email_address="", phone_number=""):
-        if self.current_user == Account():
-            return 'Please login'
+        if self.current_user == Account() or self.current_user is None:
+            return "Can not edit account. No current user"
             # check that current user has correct permissions to edit account
         cur_user_role = self.get_current_user().role
         account_to_edit = self.get_account(username)
+        if account_to_edit.user == "":
+            return 'No users with that username'
         if cur_user_role == "TA":
-            return 'Failed to edit account. Insufficient permissions'
+            return 'Insufficient permissions to edit account'
         if cur_user_role == 'Administrator' and account_to_edit.role == 'Supervisor':
-            return 'Failed to edit account. Insufficient permissions'
+            return 'Insufficient permissions to edit account'
         account_to_edit.user = username
         account_to_edit.password = password
         if street_address != "":
@@ -249,7 +251,7 @@ class Commands(CommandsInterface):
         if email_address != "":
             account_to_edit.email_address = email_address
         if phone_number != "":
-            pass
+            account_to_edit.phone_number = phone_number
         account_to_edit.save()
         return account_to_edit
 
